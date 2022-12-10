@@ -1,0 +1,62 @@
+<html>
+    <header></header>
+    <body>
+        <p-table [value]="listaItems" responsiveLayout="scroll">
+            <ng-template pTemplate="caption">
+                <div style="float: right;">
+                    <button pButton pRipple label="Volver al catálogo" icon="pi pi-chevron-circle-left" class="p-button-warning p-button-sm" (click)='volverCatalogo()'></button>
+                </div>
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    Productos
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Imagen</th>
+                    <th>Precio</th>
+                    <th>Tipo unidad</th>
+                    <th>Categorias</th>
+                    <th>Cantidad</th>
+                    <th>Unidades</th>
+                    <th>Subtotal</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-item let-i="rowIndex">
+                <tr>
+                    <td style="min-width:200px">{{item.producto?.nombre}}</td>
+                    <td style="min-width:200px"><img [src]="item.producto?.imagen" [alt]="item.producto?.nombre" width="100" class="p-shadow-4" /></td>
+                    <td style="min-width:200px">{{item.precio | currency:'USD'}}</td>
+                    <td style="min-width:200px">
+                        {{item.tipoUnidad}} {{item.valUnidad}} Unidades.
+                        <p-dropdown [options]="item.producto?.unidades_medida" [(ngModel)]="unidad" placeholder="Seleccione" optionLabel="nombre" (onChange)='cambioUnidad(i, item.producto?.unidades_medida)'></p-dropdown>
+                    </td>
+                    <td style="min-width:200px">
+                        <tr *ngFor='let tag of item.producto?.categorias'>
+                            <td>{{tag.nombre}}</td>
+                        </tr>                       
+                    </td>
+                    <td style="min-width:200px">
+                        <p-inputNumber [(ngModel)]="item.cantidad" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" inputId="horizontal" [min]="1" 
+                        decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" style="margin-left: -20%;" (ngModelChange)='calcularUnidadTotal(i, item.cantidad, item.valUnidad); verificarDisponibilidad(item.producto.cantidad, item.unidadTotal)'>
+                        </p-inputNumber>
+                    </td>
+                    <td style="min-width:200px">{{item.unidadTotal}}</td>
+                    <td style="min-width:200px">
+                        {{item.precio * item.unidadTotal | currency:'USD'}}
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="summary">
+                <div class="p-d-flex p-ai-center p-jc-between">
+                    En total se han elegido {{listaItems ? listaItems.length : 0 }} productos con un valor TOTAL: {{calcularValorTotalItems() | currency:'USD'}}
+                </div>
+            </ng-template>
+        </p-table>
+        <br>
+        <div style="text-align: center;" *ngIf='listaItems.length != 0'>
+            <p-button label="Realizar pedido" icon="pi pi-check" (click)='realizarPedido()' [disabled]="!bandDisponibilidad"></p-button>
+        </div>
+        <br>
+    </body>
+</html>

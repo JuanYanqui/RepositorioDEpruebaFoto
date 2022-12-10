@@ -1,0 +1,38 @@
+<html>
+    <header>
+    </header>
+    <body>
+        <p-panel header="Login">
+            <div class="row">
+                <div class="col">
+                    <div class="p-grid p-fluid">
+                        <div class="p-field">
+                            <label for="username1">Username</label>
+                            <input id="username1" type="username" aria-describedby="username1-help" [(ngModel)]="usuario.username" [pKeyFilter]="'alphanum'" maxlength="30" minlength="3" pInputText/>
+                            <small id="username1-help">Ingresa tu nombre de usuario</small>
+                        </div>
+                        <br>
+                        <div class="p-field">
+                            <label for="username1">Password</label>
+                            <p-password [toggleMask]="true" [(ngModel)]="usuario.password" [pKeyFilter]="'alphanum'" maxlength="15" minlength="6"></p-password>
+                            <small id="username1-help">Ingresa tu contraseña</small>
+                        </div>
+                        <br>
+                        <br>
+                        <div class="p-col-12 p-md-4">
+                            <button pButton pRipple type="button" label="Ingresar" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="login()"></button>
+                        </div>
+                        <div style="text-align: center;">
+                            <label>Aun no tienes cuenta? <a class="py-2 d-none d-md-inline-block" routerLink="/add-public-prolife" routerLinkActive="false">registrate aqui</a></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <img src="https://techclad.com/wp-content/uploads/2019/04/1807658-1-600x470.jpg" alt="" style="max-width: 100%; max-height: 90%;">
+                </div>
+            </div>
+            
+        </p-panel>
+        
+    </body>
+</html>

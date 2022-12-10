@@ -1,0 +1,171 @@
+<p-table
+  #dt
+  [value]="bodegasList"
+  dataKey="id" [rows]="25" [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10,25,50]"  [loading]="loading" styleClass="p-datatable-gridlines p-datatable-sm"
+  [paginator]="true" [rowHover]="true" [resizableColumns]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [globalFilterFields]="[
+    'id',
+    'Capacidad máxima',
+    'Descricion',
+    'Dirección',
+    'Inventario Disponible',
+    'Localidad',
+    'Alias',
+    'Telefono',
+    'Tipo de bodega',
+    'Estado'
+  ]"
+  [(selection)]="arraySelected" dataKey="code" responsiveLayout="scroll"
+  >
+  <ng-template pTemplate="caption">
+    <div class="table-header">
+      <span class="p-input-icon-right">
+        <i class="pi pi-search"></i>
+        <input
+          pInputText
+          type="text"
+          (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Global search"
+        />
+      </span>
+    </div>
+    <div class="p-d-flex" style="align-content: right;">
+      <span class="p-buttonset">
+        <br>
+        <button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;" label="PDF" icon="pi pi-file-pdf"></button>
+      </span>
+    </div>
+  </ng-template>
+  <ng-template pTemplate="header">
+    <tr>
+      <th></th>
+      <th pResizableColumn>
+          Id Bodega
+      </th>
+      <th pResizableColumn>
+          Capacidad Máxima
+      </th>
+      <th pResizableColumn>
+          Descricion
+      </th>
+      <th pResizableColumn>
+          Dirección
+     </th>
+      <th pResizableColumn >
+          Inventario Disponible
+       </th>
+      <th pResizableColumn>
+          Localidad
+     </th>
+      <th pResizableColumn>
+          Nombre
+     </th>
+      <th pResizableColumn>
+          Telefono
+      </th>
+      <th pResizableColumn>
+          Tipo de bodega
+      </th>
+      <th pResizableColumn>
+          Estado
+      </th>
+      <th>
+        <!-- <div class="p-d-flex p-jc-between p-ai-center">Accion</div> -->
+      </th>
+    </tr>
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+    </th>
+      <th >
+        <p-columnFilter  type="text" field="id"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="capacidad_max"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="descripcion"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="direccion"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="inventario_disponible"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="localidad"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="nombre"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="telefono"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="tipobodega"></p-columnFilter>
+      </th>
+      <th pResizableColumn>
+        <p-columnFilter type="text" field="estado|disponibilidad"></p-columnFilter>
+      </th>
+
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-bodega>
+    <tr >
+      <td>
+        <p-tableCheckbox [value]="bodega"></p-tableCheckbox>
+    </td>
+      <td style="width: 30px;height: 30px;">
+        {{ bodega.id }}
+      </td>
+      <td>
+        {{ bodega.capacidad_max }}
+      </td>
+      <td>
+        {{ bodega.descripcion }}
+      </td>
+      <td>
+        {{ bodega.direccion }}
+      </td>
+      <td>
+        {{ bodega.inventario_disponible }}
+      </td>
+      <td>
+        {{ bodega.localidad }}
+      </td>
+      <td>
+        {{ bodega.nombre }}
+      </td>
+      <td>
+        {{ bodega.telefono }}
+      </td>
+      <td>
+        {{ bodega.tipobodega }}
+      </td>
+      <td>
+        {{ bodega.estado | disponibilidad }}
+      </td>
+      <td style="text-align: center">
+        <a [routerLink]="['../detalle-bodega', bodega.id]"
+          class="btn btn-warning"
+          ><i class="bi bi-pencil-square"></i
+        ></a>
+        <!-- <button
+          pButton
+          type="button"
+          icon="pi pi-times"
+          class="p-button-danger"
+          (click)="disableBodega(bodega.id)"
+        >
+      </button> -->
+      </td>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="emptymessage">
+    <tr>
+      <td colspan="8">No se encontraron bodegas</td>
+    </tr>
+  </ng-template>
+</p-table>

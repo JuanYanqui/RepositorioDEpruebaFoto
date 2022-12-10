@@ -1,0 +1,20 @@
+#numeroCuenta{
+   width: 300px;
+
+}
+#nombrestitular{
+  width: 300px;
+
+}
+#tipoCuenta{
+  width: 300px;
+
+}
+#tipoBanco{
+  width: 300px;
+
+}
+#eliminarbtn{
+  background-color:#FE7C7C;
+  border-radius: 10px;
+}

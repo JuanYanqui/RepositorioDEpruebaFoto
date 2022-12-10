@@ -1,0 +1,46 @@
+<html>
+    <header>
+    </header>
+    <body>
+        <p-panel header="Registro Usuario">
+            <div class="p-grid p-fluid">
+                <div class="p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <input id="float-input" type="text" class={{verfNombres}} [(ngModel)]="persona.nombres" pInputText> 
+                        <label for="float-input">Nombres</label>
+                    </span>
+                </div>
+                <div class="p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <input id="float-input" type="text" class={{verfApellidos}} [(ngModel)]="persona.apellidos" pInputText> 
+                        <label for="float-input">Apellidos</label>
+                    </span>    
+                </div>
+                <div class="p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <input id="float-input" type="text" class={{verfCorreo}} [(ngModel)]="persona.correo" (ngModelChange)="validarCorreo()" pInputText> 
+                        <label for="float-input">Correo</label>
+                    </span>    
+                </div>
+                <div class="p-col-3 p-md-4">
+                    <span class="p-float-label">
+                        <input id="float-input" type="text" class={{verfUsername}} [(ngModel)]="usuario.username" pInputText> 
+                        <label for="float-input">Username</label>
+                    </span>    
+                </div>
+                <div class="p-col-12 p-md-4">
+                    <span class="p-float-label">
+                        <p-password [toggleMask]="true" class={{verfPassword}} [(ngModel)]="usuario.password"></p-password> 
+                        <label for="float-input">Password</label>
+                    </span>    
+                </div>
+                <br>
+                <div class="p-col-12 p-md-4">
+                    <button pButton pRipple type="button" label="Registrarse" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="registrarUsuario()" ></button>  
+                </div>
+                
+            </div>
+            
+        </p-panel> 
+    </body>
+</html>

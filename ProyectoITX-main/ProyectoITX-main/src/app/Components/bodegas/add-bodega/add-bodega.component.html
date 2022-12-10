@@ -1,0 +1,135 @@
+<main class="container">
+
+  <div class="row g-5 ">
+    <div class="col-12">
+      <h4 class="mb-3">Bodega</h4>
+      <form [formGroup]="bodegaForm" (ngSubmit)="addBodega()" class="form-group needs-validation" novalidate>
+        <div class="row g-3">
+          <div class="col-12">
+            <label for="nombre" class="form-label">Nombre</label>
+            <input name="nombre" #nombre formControlName="nombre" type="text" class="form-control" id="nombre" required [ngClass]="{
+                'is-invalid': f.nombre.touched && f.nombre.errors,
+                'is-valid': f.nombre.valid
+              }" />
+            <div class="invalid-feedback" *ngIf="f.nombre.errors?.required">
+              Es necesario un nombre.
+            </div>
+            <div class="invalid-feedback" *ngIf="f.nombre.errors?.pattern">
+              Ingrese solo letras.
+            </div>
+          </div>
+          <div class="col-12">
+            <label for="direccion" class="form-label">Direccion</label>
+
+            <input name="direccion" #direccion formControlName="direccion" type="text" class="form-control" id="direccion" [ngClass]="{
+                'is-invalid': f.direccion.touched && f.direccion.errors,
+                'is-valid': f.direccion.valid
+              }" />
+            <div class="invalid-feedback" *ngIf="f.direccion.errors?.required">
+              Es necesario una direccion.
+            </div>
+            <div class="invalid-feedback" *ngIf="f.direccion.errors?.pattern">
+              Ingrese solo letras.
+            </div>
+          </div>
+          <div class="col-md-5">
+            <label for="localidad" class="form-label">localidad</label>
+            <select formControlName="localidad" #localidad name="localidad" class="form-select" id="localidad" required [ngClass]="{
+                'is-invalid': f.localidad.touched && f.localidad.errors,
+                'is-valid': f.localidad.valid
+              }">
+              <option disabled value="">Choose...</option>
+               <option *ngFor="let car of countries" [value]="car.provincia">{{car.provincia}}</option>
+            </select>
+
+            <div class="invalid-feedback">Seleccione una localidad</div>
+          </div>
+
+
+          <div class="col-md-3">
+            <label for="telefono" class="form-label">Teléfono</label>
+            <input formControlName="telefono" #telefono name="telefono" type="tel" class="form-control" id="telefono" required [ngClass]="{
+                'is-invalid': f.telefono.touched && f.telefono.errors,
+                'is-valid': f.telefono.valid
+              }" />
+            <div class="invalid-feedback" *ngIf="f.telefono.errors?.required">
+              Ingrese un numero de Teléfono.
+            </div>
+            <div class="invalid-feedback" *ngIf="f.telefono.errors?.pattern">
+              Ingrese valores numericos.
+            </div>
+          </div>
+          <!-- personalCargos -->
+          <div class="col-md-5">
+            <label for="personalCargos" class="form-label">personalCargos</label>
+            <select (change)="selectBodegero($event)" formControlName="personalCargos" #personalCargos name="personalCargos" class="form-select" id="personalCargos" required [ngClass]="{
+                'is-invalid': f.personalCargos.touched && f.personalCargos.errors,
+                'is-valid': f.personalCargos.valid
+              }">
+              <option disabled value="">choose...</option>
+              <option *ngFor="let cargo of personal;  let i = index" [value]="i">{{cargo.personal?.usuario?.persona?.nombres}}</option>
+            </select>
+            <div class="invalid-feedback">Porfavor seleccione un personalCargos</div>
+          </div>
+          <!-- ]\
+
+
+
+            Bodega -->
+          <div class="col-md-4">
+            <label for="tipobodega" class="form-label">Tipo de bodega</label>
+            <select formControlName="tipobodega" #tipobodega name="tipobodega" class="form-select" id="tipobodega" required [ngClass]="{
+                'is-invalid': f.tipobodega.touched && f.tipobodega.errors,
+                'is-valid': f.tipobodega.valid
+              }">
+              <option disabled value="">Choose...</option>
+              <option>Rotación lenta</option>
+              <option>General</option>
+              <option>Rotación rápida</option>
+            </select>
+            <div class="invalid-feedback">
+              Porfavor seleccione el tipo de bodega
+            </div>
+          </div>
+          <div class="col-md-3">
+            <label for="capacidad_max" class="form-label">Capacidad maxima</label>
+            <input #capacidad_max formControlName="capacidad_max" name="capacidad_max" type="text" class="form-control" id="capacidad_max" required [ngClass]="{
+                'is-invalid': f.capacidad_max.touched && f.capacidad_max.errors,
+                'is-valid': f.capacidad_max.valid
+              }" />
+            <div class="invalid-feedback" *ngIf="f.capacidad_max.errors?.required">
+              Ingrese la capacidad maxima de la bodega.
+            </div>
+            <div class="invalid-feedback" *ngIf="f.capacidad_max.errors?.pattern">
+              Ingrese valores numericos.
+            </div>
+          </div>
+        </div>
+
+
+        <!-- descripcion -->
+        <div class="form-floating mt-3">
+          <textarea formControlName="descripcion" name="descripcion" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" [ngClass]="{
+              'is-valid': f.descripcion.touched && f.descripcion.valid
+            }"></textarea>
+          <label for="floatingTextarea2">Descripcion<span class="text-muted"> (Optional)</span></label>
+        </div>
+
+        <hr class="my-4" />
+        <div class="btn-group col-12" role="group" aria-label="Basic mixed styles example" style="position: relative"><button (click)="resetForm()" type="button" class="w-50 m-lg-1 btn btn-primary">
+
+            Reset
+          </button>
+          <button [disabled]="loading" class="w-50 m-lg-1 btn btn-primary">
+            <ngx-spinner bdColor="rgb(11,94,215)" size="default" color="#fff" type="line-scale-pulse-out-rapid" [fullScreen]="false">
+              <p style="color: white"></p>
+            </ngx-spinner>
+            Guardar Bodega
+          </button>
+
+
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

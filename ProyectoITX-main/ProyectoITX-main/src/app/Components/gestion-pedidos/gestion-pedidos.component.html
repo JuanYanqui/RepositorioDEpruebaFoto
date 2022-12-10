@@ -1,0 +1,355 @@
+<html>
+    <header></header>
+    <body>
+        <div class="container">
+            <br>
+            <div class="row">
+                <div *ngFor="let opcion of opciones" style="text-align: center;" class="col">
+                    <p-radioButton [inputId]="opcion.id" name="category" [value]="opcion" [(ngModel)]="opcionSelected" (onClick)='filtraLista()'></p-radioButton>
+                    <label [for]="opcion.key">{{opcion.name}}</label>
+                </div>
+            </div>
+            <br>
+            <div *ngIf="!bandVentasDirectas">
+                <p-table #Ped [value]="listaPedidos" dataKey="id" [scrollable]="true" [rowHover]="true" [rows]="10" scrollHeight="500px"
+                [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+                [globalFilterFields]="['cedula','nombre']">
+                    <ng-template pTemplate="caption">
+                        <!-- <div class="table-header">
+                            <span class="p-input-icon-right">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text"
+                                    (input)="Ped.filterGlobal($any($event.target).value, 'contains')"
+                                    placeholder="Buscar..." />
+                            </span>
+                        </div> -->
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th pSortableColumn="cedula">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Cédula cliente
+                                </div>
+                            </th>
+                            <th pSortableColumn="nombre">
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Nombre cliente                                    
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Fecha pedido
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Ver pedido
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-pedido let-i="rowIndex">
+                        <tr class="p-selectable-row" *ngIf='!pedido.revicion && !pedido.aceptacion && bandPendientes'>
+
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.cedula}}
+                            </td>
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.nombres}} {{pedido.cliente?.usuario?.persona?.apellidos}}
+                            </td>
+                            <td>
+                                {{pedido.fechaPedido}}
+                            </td>
+                            <td style="text-align: center">
+                                <button pButton pRipple type="button" icon="pi pi-eye" label="Ver pedido" (click)='verPedido(pedido, true, i)'></button>
+                            </td>
+                        </tr>
+                        <tr class="p-selectable-row" *ngIf='pedido.revicion && pedido.aceptacion && bandAceptados'>
+
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.cedula}}
+                            </td>
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.nombres}} {{pedido.cliente?.usuario?.persona?.apellidos}}
+                            </td>
+                            <td>
+                                {{pedido.fechaPedido}}
+                            </td>
+                            <td style="text-align: center">
+                                <button pButton pRipple type="button" icon="pi pi-eye" label="Ver pedido" (click)='verPedido(pedido, true, i)'></button>
+                            </td>
+                        </tr>
+                        <tr class="p-selectable-row" *ngIf='pedido.revicion && !pedido.aceptacion && bandRechazados'>
+
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.cedula}}
+                            </td>
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.nombres}} {{pedido.cliente?.usuario?.persona?.apellidos}}
+                            </td>
+                            <td>
+                                {{pedido.fechaPedido}}
+                            </td>
+                            <td style="text-align: center">
+                                <button pButton pRipple type="button" icon="pi pi-eye" label="Ver pedido" (click)='verPedido(pedido, true, i)'></button>
+                            </td>
+                        </tr>
+                        <tr class="p-selectable-row" *ngIf='!pedido.revicion && pedido.aceptacion && bandCancelados'>
+
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.cedula}}
+                            </td>
+                            <td>
+                                {{pedido.cliente?.usuario?.persona?.nombres}} {{pedido.cliente?.usuario?.persona?.apellidos}}
+                            </td>
+                            <td>
+                                {{pedido.fechaPedido}}
+                            </td>
+                            <td style="text-align: center">
+                                <button pButton pRipple type="button" icon="pi pi-eye" label="Ver pedido" (click)='verPedido(pedido, true, i)'></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        
+                    </ng-template>
+                    <ng-template pTemplate="emptymessage">
+                        <tr>
+                            <td colspan="8">No se encontraron pedidos</td>
+                        </tr>
+                    </ng-template>
+                </p-table>
+            </div>
+            <!-- TABLA PARA VIZUALIZAR LAS VENTAS DIRECTAS -->
+            <div *ngIf="bandVentasDirectas">
+                <p-table #VenDir [value]="listaVentasDirectas" [scrollable]="true" [rowHover]="true" [rows]="10" scrollHeight="500px"
+                [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [paginator]="true"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0">
+                    <ng-template pTemplate="caption">
+
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Cedula
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Nombre
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Fecha venta
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Valor
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Metodo pago
+                                </div>
+                            </th>
+                            <th>
+                                <div class="p-d-flex p-jc-between p-ai-center">
+                                    Revisar
+                                </div>
+                            </th>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-venta let-i="rowIndex">
+                        <tr class="p-selectable-row">
+                            <td>{{venta.persona.cedula}}</td>
+                            <td>{{venta.persona.nombres}} {{venta.persona.apellidos}}</td>
+                            <td>{{venta.fechaVenta}}</td>
+                            <td>{{venta.valorPagar | currency:'USD'}}</td>
+                            <td>{{venta.metodoPago}}</td>
+                            <td style="text-align: center">
+                                <button pButton pRipple type="button" icon="pi pi-eye" label="Ver" (click)='verPedido(venta.pedido, false, i)'></button>
+                            </td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        
+                    </ng-template>
+                </p-table>
+            </div>
+        </div>
+
+    </body>
+
+
+    <!-- PANEL PARA VIZUALIZAR UN PEDIDO EN ESPECIFICO -->
+    <p-dialog header="Pedido" [(visible)]="displayVP" [modal]="true" [style]="{width: '75vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+        <ng-template pTemplate="body">
+            <div class="p-grid p-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]='cedula' class="form-control" pInputText disabled>
+                                <label for="float-input">Cédula</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]='nombre' class="form-control" pInputText disabled>
+                                <label for="float-input">Nombre</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="date" [(ngModel)]='fecha' class="form-control" pInputText disabled>
+                                <label for="float-input">Fecha</label>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <br>
+
+            <p-table [value]="listaItemsPedido" [scrollable]="true" scrollHeight="400px">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:200px">Nombre</th>
+                        <th style="min-width:200px">Imagen</th>
+                        <th style="min-width:200px">Precio</th>
+                        <th style="min-width:200px">Categoria</th>
+                        <th style="min-width:200px">Tipo</th>
+                        <th style="min-width:200px">Cantidad</th>
+                        <th style="min-width:200px">Unidades</th>
+                        <th style="min-width:200px">Subtotal</th>
+                        <th style="min-width:200px" *ngIf='bandPendientes'>Stock</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td style="min-width:200px">{{item.producto?.nombre}}</td>
+                        <td style="min-width:200px"><img [src]="item.producto?.imagen" [alt]="item.producto?.nombre" width="100" class="p-shadow-4" /></td>
+                        <td style="min-width:200px">{{item.precio | currency:'USD'}}</td>
+                        <td style="text-align:center">
+                            <div *ngFor='let tag of item.producto?.categorias'>
+                                <span>{{tag.nombre}}</span>
+                            </div>
+                        </td>
+                        <td style="min-width:200px">{{item.tipoUnidad}}</td>
+                        <td style="min-width:200px">{{item.cantidad}}</td>
+                        <td style="min-width:200px">{{item.unidadTotal}}</td>
+                        <td style="min-width:200px">{{item.subtotal | currency:'USD'}}</td>
+                        <td style="min-width:200px" *ngIf='bandPendientes'>
+                            <div *ngIf='verificarStock(item.unidadTotal, item.producto?.cantidad) === "EN STOCK"; else fueraStock'><b style="color: rgb(82, 160, 4);">{{verificarStock(item.unidadTotal, item.producto?.cantidad)}}</b></div>
+                            <ng-template #fueraStock><b style="color: red;">{{verificarStock(item.unidadTotal, item.producto?.cantidad)}}</b></ng-template>
+                        </td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between" style="text-align: justify;">
+                        IVA: {{empresa.iva}} %
+                        <br>
+                        TOTAL IVA: {{venta.valorIva | currency:'USD'}}
+                        <br>
+                        TOTAL SIN IVA: {{venta.valorSinIva | currency:'USD'}}
+                        <br>
+                        TOTAL: {{venta.valorPagar | currency:'USD'}}
+                    </div>
+                    <div class="col">
+                        <p-button style="position: relative;margin-left: 90%;" label="Imprimir" icon="pi pi-print" (click)="generarPDF()" ></p-button>
+                    </div>
+                </ng-template>
+            </p-table>
+            <br>
+
+            <div class="p-grid p-fluid" *ngIf='bandPendientes'>
+                <div class="p-col-3 p-md-4">
+                    <label for="float-input">Método de pago</label>
+                    <p-dropdown id="float-input" [options]="pagos" [(ngModel)]="venta.metodoPago" placeholder="Seleccione el metodo de pago"></p-dropdown>   
+                </div>
+                <div *ngIf='venta.metodoPago === "Contado"'>
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <label for="locale-us">Valor a pagar</label>
+                                <p-inputNumber id="float-input" [(ngModel)]="venta.valorPagar" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                            </div>
+                            <div class="p-col-12 p-md-4">
+                                <label for="locale-us">Vuelto</label>
+                                <p-inputNumber id="float-input" [(ngModel)]="venta.vuelto" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <label for="locale-us">Valor a caja</label>
+                                <p-inputNumber id="float-input" [(ngModel)]="venta.valorCaja" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" (ngModelChange)="calcularVuelto()"></p-inputNumber>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf='venta.metodoPago === "Cheque"'>
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <label for="locale-us">Valor a pagar</label>
+                                <p-inputNumber id="float-input" [(ngModel)]="venta.valorPagar" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <label for="float-input">Número cheque</label>
+                                <input id="float-input" type="text" [(ngModel)]="venta.numeroCheque" [pKeyFilter]="'int'" maxlength="13" minlength="10" pInputText required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf='venta.metodoPago === "Tarjeta"'>
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <label for="locale-us">Valor a pagar</label>
+                                <p-inputNumber id="float-input" [(ngModel)]="venta.valorPagar" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <label for="float-input">Número tarjeta</label>
+                                <input id="float-input" type="text" [(ngModel)]="venta.numeroTarjeta" [pKeyFilter]="'int'" maxlength="13" minlength="10" pInputText required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="p-col-12 p-md-4">
+                    <div class="row">
+                        <div class="col" *ngIf="bandStock">
+                            <button pButton pRipple type="button" label="Aceptar" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-success" (click)="aceptarPedido()"></button>
+                        </div>
+                        <div class="col">
+                            <button pButton pRipple type="button" label="Rechazar" icon="pi pi-times" iconPos="right" class="p-button-rounded p-button-danger" (click)="rechazarPedido()"></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="p-col-12 p-md-4" *ngIf='bandAceptados'>
+                <div *ngIf='!this.venta.estadoEntrega; else entregado'>
+                    
+                    <button pButton pRipple type="button" label="Entregar" icon="pi pi-check" iconPos="right" class="p-button-rounded" (click)="entregarPedidoVenta()"></button>
+
+                </div>
+                <ng-template #entregado>
+                    <button pButton pRipple type="button" label="Ya ha sido entregado el {{this.venta.fechaEntrega}}" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-warning" disabled></button>
+                    
+                </ng-template>
+            </div>
+        </ng-template>
+    </p-dialog>
+</html>

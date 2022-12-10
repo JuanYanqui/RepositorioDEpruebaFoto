@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Personal</title>
+</head>
+<body>
+  <div class="card text-center ">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="/personal">Registrar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tab" href="./lista-personal">Listar Personal</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+     <div class="container">
+      <div class="card-body ">
+        <div class="tab-content">
+          <div class="tab-pane active" id="registrar">
+            <h5 class="card-title">Lista del personal</h5>
+            <main>
+              <div class="row g-5">
+                <div class="col-12">
+  <p-table #dt [value]="listaPersonalCargos" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10,25,50]"  [loading]="loading" styleClass="p-datatable-gridlines"
+  [paginator]="true" [rowHover]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [globalFilterFields]="['idPersonalCargo','personal.usuario.persona.cedula','personal.usuario.persona.nombres','cargo.nombre,this.personalCargos.estado']"
+  [(selection)]="arraySelected" dataKey="code" responsiveLayout="scroll">
+  <ng-template pTemplate="caption">
+  <div class="p-d-flex">
+    <span class="p-input-icon-left p-ml-auto">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+      </span>
+</div>
+<div class="p-d-flex" style="align-content: right;">
+  <span class="p-buttonset">
+    <br>
+    <button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;" label="PDF" icon="pi pi-file-pdf"></button>
+  </span>
+</div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+      <th>
+
+    </th>
+        <th>
+            Codigo
+        </th>
+        <th >
+                 Cedula
+        </th>
+        <th >
+                Nombre
+        </th>
+        <th>
+              Cargo
+           </th>
+        <th >
+              Estado
+        </th>
+    <th >
+          Actualizar/Ver
+   </th>
+    </tr>
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+    </th>
+      <th>
+        <p-columnFilter type="text" field="idPersonalCargo"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="personal.usuario.persona.cedula"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="personal.usuario.persona.nombres"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="cargo.nombre"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="this.personalCargos.estado"></p-columnFilter>
+      </th>
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-personalCargos>
+    <tr class="p-selectable-row">
+      <td>
+        <p-tableCheckbox [value]="personalCargos"></p-tableCheckbox>
+    </td>
+        <td>
+            {{personalCargos.idPersonalCargo}}
+        </td>
+        <td>
+            {{personalCargos.personal?.usuario?.persona?.cedula}}
+        </td>
+        <td>
+            {{personalCargos.personal?.usuario?.persona?.nombres}} {{personalCargos.personal?.usuario?.persona?.apellidos}}
+        </td>
+        <td>
+            {{personalCargos.cargo?.nombre}}
+        </td>
+        <td>
+          <p-toggleButton  [(ngModel)]="personalCargos.estado" (click)="deshabilitar(personalCargos)"></p-toggleButton>
+        </td>
+        <td>
+          <p-button (click)="editar(personalCargos.idPersonalCargo)"  pButton pRipple icon="pi pi-user-edit"
+          class="p-button-rounded p-button-success"></p-button>
+          <p-dialog header="     " [(visible)]="displayMaximizable" [modal]="true" [style]="{width: '50%'}" [maximizable]="true"
+              [draggable]="false" [resizable]="false">
+                   <app-editar-personal [datainicialPersonal]=datainicialPersonal></app-editar-personal>
+                   <ng-template pTemplate="footer">
+                      <p-button icon="pi pi-check" (click)="displayMaximizable=false;this.obtenerPersonal()" label="Ok" styleClass="p-button-text"></p-button>
+                  </ng-template>
+          </p-dialog>
+        </td>
+    </tr>
+</ng-template>
+<ng-template pTemplate="emptymessage">
+    <tr>
+        <td colspan="8">No se encontraron personales asignados</td>
+    </tr>
+</ng-template>
+</p-table>
+                </div>
+              </div>
+            </main>
+          </div>
+          <!-- panel 2  listar productos-->
+          <div class="tab-pane" id="listar">
+            <h5 class="card-title mb-3">Clientes</h5>
+            <div class="tab-pane active" id="registrar">
+              <main>
+                <div class="row g-5">
+                  <div class="col-12">
+                   </div>
+                </div>
+                <hr class="my-4">
+                <!-- cards productos -->
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+       </div>
+</body>
+</html>

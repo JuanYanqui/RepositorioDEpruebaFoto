@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Listar Clientes</title>
+</head>
+<body>
+  <div class="card text-center ">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link" aria-current="true" data-bs-toggle="tab" href="/cliente">Registrar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tab" href="/lista-clientes">Listar Clientes</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+     <div class="container">
+      <div class="card-body ">
+        <div class="tab-content">
+          <div class="tab-pane active" id="registrar">
+            <h5 class="card-title">Lista de Clientes</h5>
+            <main>
+              <div class="row g-5">
+                <div class="col-12">
+  <p-table #dt [value]="listaClientes" dataKey="id" dataKey="id" [rows]="10" [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10,25,50]"  [loading]="loading" styleClass="p-datatable-gridlines"
+  [paginator]="true" [rowHover]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+  [globalFilterFields]="['idCliente','usuario.persona.cedula','usuario.persona.nombres','usuario.persona.apellidos','estado']"
+  [(selection)]="arraySelected" dataKey="code" responsiveLayout="scroll">
+<ng-template pTemplate="caption">
+  <div class="p-d-flex">
+    <span class="p-input-icon-left p-ml-auto">
+        <i class="pi pi-search"></i>
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+      </span>
+</div>
+<div class="p-d-flex" style="align-content: right;">
+  <span class="p-buttonset">
+    <br>
+    <button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;" label="PDF" icon="pi pi-file-pdf"></button>
+  </span>
+</div>
+</ng-template>
+<ng-template pTemplate="header">
+    <tr>
+      <th>
+
+      </th>
+      <th >
+                Codigo
+      </th>
+      <th >
+                  Cedula
+      </th>
+      <th >
+                Nombres
+      </th>
+      <th >
+                Apellidos
+      </th>
+      <th >
+              Estado
+      </th>
+      <th pSortableColumn="ver">
+        <div class="p-d-flex p-jc-between p-ai-center">
+            Ver/Editar
+        </div>
+    </th>
+    </tr>
+    <tr>
+      <th style="width: 3rem">
+        <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+    </th>
+      <th>
+        <p-columnFilter type="text" field="idCliente"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="usuario.persona.cedula"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="usuario.persona.nombres"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="usuario.persona.apellidos"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="estado"></p-columnFilter>
+      </th>
+    </tr>
+</ng-template>
+<ng-template pTemplate="body" let-clientes>
+    <tr class="p-selectable-row">
+      <td>
+        <p-tableCheckbox [value]="clientes"></p-tableCheckbox>
+    </td>
+        <td>
+            {{clientes.idCliente}}
+        </td>
+        <td>
+            {{clientes.usuario?.persona?.cedula}}
+        </td>
+        <td>
+            {{clientes.usuario?.persona?.nombres}}
+        </td>
+        <td>
+            {{clientes.usuario?.persona?.apellidos}}
+        </td>
+        <td>
+          <p-toggleButton [(ngModel)]="this.clientes.estado" (click)="actualizarEstado(clientes.idCliente)"  style="margin-left: 50%;" ></p-toggleButton>
+        </td>
+        <td>
+          <p-button (click)="editar(clientes.idCliente)"  pButton pRipple icon="pi pi-user-edit"
+            class="p-button-rounded p-button-success"></p-button>
+            <p-dialog header="     " [(visible)]="displayMaximizable" [modal]="true" [style]="{width: '50vw'}" [maximizable]="true"
+                [draggable]="false" [resizable]="false">
+                     <app-editar-clientes [datainicial]=datainicial></app-editar-clientes>
+                    <ng-template pTemplate="footer">
+                        <p-button icon="pi pi-check" (click)="displayMaximizable=false;this.listar()" label="Ok" styleClass="p-button-text"></p-button>
+                    </ng-template>
+            </p-dialog>
+        </td>
+    </tr>
+</ng-template>
+<ng-template pTemplate="emptymessage">
+    <tr>
+        <td colspan="8">No se encontraron clientes</td>
+    </tr>
+</ng-template>
+</p-table>
+                </div>
+              </div>
+            </main>
+          </div>
+          <!-- panel 2  listar productos-->
+          <div class="tab-pane" id="listar">
+            <h5 class="card-title mb-3">Clientes</h5>
+            <div class="tab-pane active" id="registrar">
+              <main>
+                <div class="row g-5">
+                  <div class="col-12">
+                   </div>
+                </div>
+                <hr class="my-4">
+                <!-- cards productos -->
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+       </div>
+</body>
+</html>

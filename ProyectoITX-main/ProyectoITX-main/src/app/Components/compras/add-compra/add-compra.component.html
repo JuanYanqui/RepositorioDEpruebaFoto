@@ -1,0 +1,279 @@
+<main>
+  <div class="row g-5">
+    <div class="">
+      <form
+        [formGroup]="compraForm"
+        (ngSubmit)="addProducto()"
+        class="form-group"class="needs-validation" novalidate
+      >
+        <div class="row g-3 mt-5">
+          <div class="grid p-fluid ">
+
+              <div class="p-field col-6">
+                  <label for="producto" >Producto</label>
+                <p-autoComplete
+                  name="producto"
+                  #producto
+                  formControlName="producto"
+                  id="producto"
+                  (ngModelChange)="somethingChanged($event)"
+                  [showEmptyMessage]="true"
+                  [suggestions]="filteredProducts"
+                  (completeMethod)="filterProduct($event)"
+                  field="nombre"
+                  [minLength]="1"
+                >
+                </p-autoComplete>
+ <!-- <input
+              name="producto"
+              #producto
+              formControlName="producto"
+              type="text"
+              class="form-control"
+              id="producto"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  f.producto.touched && f.producto.errors,
+                'is-valid': f.producto.valid
+              }"
+            /> -->
+                <div class="p-error" *ngIf="f.producto.errors?.required">
+                  Es necesario un nombre de producto.
+                </div>
+                <div
+                  class="invalid-feedback"
+                  *ngIf="f.producto.errors?.pattern"
+                >
+                  Ingrese solo letras.
+                </div>
+            </div>
+            <div class="p-field col-6">
+            <label for="proveedores">Proveedor</label>
+            <p-multiSelect
+            [(ngModel)]="selectedProveedores"
+             name="proveedores"
+                  #proveedores
+                  id="proveedores"
+              [options]="listProveedores"
+              defaultLabel="Seleccione un proveedor"
+              optionLabel="nombreProveedor"
+              formControlName="proveedores"
+              display="chip"
+
+             required
+              [ngClass]="{
+                'is-invalid':
+                  f.proveedores.touched && f.proveedores.errors,
+                'is-valid': f.proveedores.valid
+              }" ></p-multiSelect>
+
+            <div class="invalid-feedback">Por favor seleccione un proveedor</div>
+          </div>
+
+          </div>
+          <!-- precios -->
+          <div class="col-md-6">
+            <label for="cantidad" class="form-label">Cantidad</label>
+            <input
+              pKeyFilter="int"
+              name="cantidad"
+              #cantidad
+              formControlName="cantidad"
+              type="text"
+              class="form-control"
+              id="cantidad"
+              min="0"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  f.cantidad.touched && f.cantidad.errors ,
+                'is-valid': f.cantidad.valid
+              }"
+            />
+            <div
+              class="invalid-feedback"
+              *ngIf="f.cantidad.errors?.required"
+            >
+              Ingrese la cantidad de productos a pedir.
+            </div>
+            <div
+              class="invalid-feedback"
+              *ngIf="f.cantidad.errors?.pattern"
+            >
+              Ingrese valores numericos.
+            </div>
+                      <span class="invalid-feedback" *ngIf="f.cantidad.errors?.maxlength">
+                        Ingrese 4 caracteres.
+                      </span>
+          </div>
+          <!-- unidad -->
+
+          <div class="col-md-6">
+            <label for="unidad" class="form-label">Unidad de medida</label>
+            <select (change)="searchWithCode($event)"
+              name="unidad"
+              #unidad
+              formControlName="unidad"
+              name="unidad"
+              class="form-select"
+              id="unidad"
+              required
+              [ngClass]="{
+                'is-invalid':
+                  f.unidad.touched && f.unidad.errors,
+                'is-valid': f.unidad.valid
+              }"
+            >
+              <option value="Unidad">Unidad</option>
+              <option
+                *ngFor="let unidad of listUnidadesMedida | async; let i=index"
+                [value]="unidad.nombre"
+              >
+                {{ unidad.nombre }}
+              </option>
+            </select>
+            <div class="invalid-feedback">Por favor seleccione una unidad</div>
+          </div>
+          <div
+            class="btn-group"
+            role="group"
+            aria-label="Basic mixed
+                    styles example"
+          >
+            <button
+              class="btn btn-success"
+              type="submit"
+              [disabled]="!compraForm.valid"
+            >
+              Agregar producto
+            </button>
+          </div>
+          <div style="position: relative">
+            <div style="color: #212529" class="mb-3 mt-3 separator"></div>
+            <table
+              *ngIf="listaCompra?.length"
+              class="
+                table
+                caption-top
+                table-hover
+                text-center text-capitalize text-body
+              "
+            >
+              <caption>
+                Listado de productos
+              </caption>
+              <thead class="table-dark">
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Nombre</th>
+                  <th scope="col">Cantidad</th>
+                  <th scope="col">Unidad</th>
+                  <th scope="col">Valor unitario</th>
+                  <th scope="col">Cantidad unitarias</th>
+                  <th scope="col">Valor de unidades</th>
+                  <th scope="col">Accion</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let compra of listaCompra; let i = index">
+                  <th class="align-middle" scope="row">{{ i + 1 }}</th>
+                  <td class="align-middle">{{ compra.producto.nombre }}</td>
+                  <td class="align-middle">{{ compra.cantidad }}</td>
+                  <td class="align-middle">{{ compra.unidad }}</td>
+                  <td class="align-middle">
+                    {{ compra.producto.precio_compra }}
+                  </td>
+                  <td class="align-middle">
+                    {{compra.cantidad_unitarias }}
+                  </td>
+                  <td class="align-middle">
+                    {{compra.valor_total.toLocaleString()}}
+                  </td>
+                  <td class="align-middle">
+                    <div class="btn-group">
+                      <!-- <button
+                        (click)="editProduct(+i)"
+                        type="button"
+                        class="btn btn-outline-secondary me-1"
+                      >
+                       <i class="bi bi-pencil-square"></i>
+                        <span class="visually-hidden">Button</span>
+                      </button> -->
+                      <button
+                        type="button"
+                        (click)="deleteProduct(+i)"
+                        class="btn btn-outline-danger ms-1"
+                      >
+                      <i class="bi bi-trash"></i>
+                        <span class="visually-hidden">Button</span>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+              <tfoot style="text-align: center mb-3">
+                <tr *ngIf="valorTotal === 0; else foo_tr"></tr>
+                <ng-template #foo_tr>
+                  <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                      Total: {{ valorTotal.toLocaleString()
+                      }}<i class="bi bi-currency-dollar text-dark"></i>
+                      <!-- <span class="input-group-text bg-success bg-opacity-75"
+                        ></span> -->
+                    </td>
+                    <td>
+                      <button
+                        type="button"
+                        (click)="clearList()"
+                        class="btn btn-danger"
+                      >
+                      <i class="bi bi-journal-x"></i>
+                        Vaciar lista
+                      </button>
+                      <!-- <div class="dropdown-divider"></div>
+                      <a class="dropdown-item" (click)="clearList()">
+                        Vaciar lista</a
+                      > -->
+                    </td>
+                  </tr>
+                </ng-template>
+              </tfoot>
+            </table>
+
+            <ngx-spinner
+              bdOpacity="0.9"
+              bdColor="rgba(143,169,185,0.8)"
+              size="medium"
+              color="#fff"
+              type="pacman"
+              [fullScreen]="false"
+            >
+            </ngx-spinner>
+          </div>
+        </div>
+
+        <div
+          class="btn-group col-12 mb-3"
+          role="group"
+          aria-label="Basic
+                  mixed styles example"
+        >
+          <button
+            type="button"
+            (click)="pedirCompra()"
+            class="w-100 m-lg-1 btn btn-primary"
+          >
+            Realizar pedido
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>

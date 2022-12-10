@@ -1,0 +1,71 @@
+<html>
+    <header></header>
+    <body>
+        <p-carousel [value]="listaEmpresas" styleClass="custom-carousel" [numVisible]="3" [numScroll]="1" [circular]="true" [autoplayInterval]="3000" [responsiveOptions]="responsiveOptions">
+            <ng-template pTemplate="header">
+                <br>
+                <h5 style="text-align: center;">Las mejores empresas con los mejores productos!</h5>
+                <br>
+                <br>
+            </ng-template>
+            <ng-template let-empresa pTemplate="item">
+                <div class="product-item">
+                    <div class="product-item-content" style="text-align: center;">
+                        <div class="p-mb-3">
+                            <img src="{{empresa.logo}}" [alt]="empresa.nombre" class="empresa-logo" />
+                        </div>
+                        <br>
+                        <div>
+                            <h4 class="p-mb-1">{{empresa.acronimo}}</h4>
+                            <h6 class="p-mt-0 p-mb-3">{{empresa.rolComercial}}</h6>
+                            <h6 class="p-mt-0 p-mb-3"><i class="pi pi-globe"></i> {{empresa.paginaWeb}}</h6>
+                            <h6 class="p-mt-0 p-mb-3"><i class="pi pi-mobile"></i> {{empresa.celular}}</h6>
+                            <h6 class="p-mt-0 p-mb-3"><i class="pi pi-phone"></i> {{empresa.telefono}}</h6>
+                            <h6 class="p-mt-0 p-mb-3"><i class="pi pi-compass"></i> {{empresa.direccion}}</h6>
+                            <div class="car-buttons p-mt-5">
+                                <p-button type="button" styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-eye" (click)="obtenerProductosEmpresa(empresa)"></p-button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </ng-template>
+        </p-carousel>
+        <div class="card">
+            <p-virtualScroller [value]="listaProductos" scrollHeight="450px" [itemSize]="100" [rows]="100" 
+                [lazy]="true">
+                <ng-template pTemplate="header">
+                    Lista de Productos de la empresa {{nombreEmpresa}}
+                </ng-template>
+                <ng-template let-producto pTemplate="item" let-i="index">
+                    <div class="product-item">
+                        <div class="image-container">
+                            <img src="{{producto.imagen}}" [alt]="producto.nombre" class="product-image" style="width: 5rem; height: 5rem;"/>
+                        </div>
+                        <div class="product-list-detail">
+                            <h5 class="p-mb-2">{{producto.nombre}}</h5>
+                            <h6 class="p-mb-2">{{producto.descripcion}}</h6>
+                            <i class="pi pi-tag product-category-icon"></i>
+                        </div>
+                        <div class="product-list-action">
+                            <h6 class="p-mb-2">$ {{producto.precio_venta}}</h6>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template let-producto pTemplate="loadingItem">
+                    <div class="product-item loading-item">
+                        <div class="image-container"></div>
+                        <div class="product-list-detail">
+                            <h5 class="p-mb-2"></h5>
+                            <i class="product-category-icon"></i>
+                            <span class="product-category"></span>
+                        </div>
+                        <div class="product-list-action">
+                            <h6 class="p-mb-2"></h6>
+                            <span class="product-badge"></span>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-virtualScroller>
+        </div>
+    </body>
+</html>

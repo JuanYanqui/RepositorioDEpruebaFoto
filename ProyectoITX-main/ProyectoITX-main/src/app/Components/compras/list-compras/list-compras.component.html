@@ -1,0 +1,118 @@
+<p-table #dt [value]="detallecompras" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" styleClass="card p-datatable-sm" [paginator]="true" [rowHover]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['id','valor_total','estado']" [(selection)]="arraySelected" responsiveLayout="scroll">
+    <ng-template pTemplate="caption">
+        <div class="p-d-flex">
+            <span class="p-input-icon-left p-ml-auto">
+                <i class="pi pi-search"></i>
+                <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+            </span>
+        </div>
+        <div class="p-d-flex" style="align-content: right;">
+            <span class="p-buttonset">
+                <br>
+                <button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;" label="PDF" icon="pi pi-file-pdf"></button>
+            </span>
+        </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+        <tr>
+            <th style="text-align:center"></th>
+            <th style="width: 3rem"></th>
+            <th style="text-align:center" pSortableColumn="id">Id<p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th style="text-align:center" pSortableColumn="valor_total">Valor Total<p-sortIcon field="valor_total"></p-sortIcon>
+            </th>
+            <th style="text-align:center" pSortableColumn="estado">Estado <p-sortIcon field="estado"></p-sortIcon>
+            </th>
+            <th></th>
+        </tr>
+        <tr>
+            <th style="text-align:center">
+                <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th style="text-align:center">
+            </th>
+            <th style="text-align:center">
+                <p-columnFilter type="text" field="id"></p-columnFilter>
+            </th>
+            <th style="text-align:center">
+                <p-columnFilter type="text" field="valor_total"></p-columnFilter>
+            </th>
+            <th style="text-align:center">
+                <p-columnFilter type="text" field="estado"></p-columnFilter>
+            </th>
+            <th style="text-align:center">
+
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-compradetail let-expanded="expanded">
+        <tr>
+            <td style="text-align:center">
+                <p-tableCheckbox [value]="compradetail"></p-tableCheckbox>
+            </td>
+            <td style="text-align:center">
+                <button type="button" pButton pRipple [pRowToggler]="compradetail" class="p-button-text p-button-rounded p-button-plain" [icon]="expanded ? 'pi pi-chevron-down' : 'pi pi-chevron-right'"></button>
+            </td>
+            <td style="text-align:center">{{compradetail.id}}</td>
+            <td style="text-align:center">{{compradetail.valor_total | currency:'USD'}}</td>
+            <td style="text-align:center">
+                <div *ngFor="let nombre of estados; let i as index;">
+                    <ng-container *ngIf="compradetail.estado=='estados.nombre'">
+                        <span>{{nombre.name}}</span>
+                    </ng-container>
+                </div>
+                <div *ngFor="let estado of estados">
+                    <ng-template [ngIf]="compradetail.estado.toLowerCase() === estado.name.toLowerCase()">
+                        <span class="m-2 rounded " [style]="estado.style">
+                            <small class="fw-bold fs-6 m-2">
+                                {{estado.name.toUpperCase()}}
+                            </small>
+                        </span>
+                    </ng-template>
+                </div>
+            </td>
+            <td style="text-align:center">
+                <div *ngIf="compradetail.estado.toLowerCase()==='pendiente' && compradetail.estado.toLowerCase()!=='cancelado'">
+
+                    <button pButton pRipple (click)="cancelarCompra(compradetail)" label="CANCELAR PEDIDO" class="p-button-danger "></button>
+                </div>
+            </td>
+        </tr>
+
+    </ng-template>
+    <ng-template pTemplate="rowexpansion" let-compradetail>
+        <tr>
+            <td colspan="7">
+                <div class="p-p-3">
+                    <p-table [value]="compradetail.compras" styleClass="p-datatable-gridlines" dataKey="id">
+                        <ng-template pTemplate="header">
+        <tr>
+            <th pSortableColumn="id">Producto <p-sortIcon field="id"></p-sortIcon>
+            </th>
+            <th pSortableColumn="cantidad">Cantidad <p-sortIcon field="cantidad"></p-sortIcon>
+            </th>
+            <th pSortableColumn="unidad">Unidad <p-sortIcon field="unidad"></p-sortIcon>
+            </th>
+            <th pSortableColumn="valor_total">Valor total <p-sortIcon field="valor_total"></p-sortIcon>
+            </th>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-compras>
+        <tr>
+            <td>{{compras.producto.nombre}}</td>
+            <td>{{compras.cantidad}}</td>
+            <td>{{compras.unidad}}</td>
+            <td>{{compras.valor_total | currency:'USD'}}</td>
+        </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+        <tr>
+            <td colspan="6">There are no compras for this compradetail yet.</td>
+        </tr>
+    </ng-template>
+</p-table>
+</div>
+</td>
+</tr>
+</ng-template>
+</p-table>

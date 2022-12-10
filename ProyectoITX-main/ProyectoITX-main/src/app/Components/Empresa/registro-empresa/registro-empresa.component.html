@@ -1,0 +1,269 @@
+<html>
+    <header>
+    </header>
+    <body>
+        <p-panel header="Registro Empresa">
+            <h4 style="text-align: center;">Datos de la empresa</h4>
+            <div class="p-grid p-fluid">                
+                <div class="row">
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.ruc" [pKeyFilter]="'int'" maxlength="13" minlength="13" pInputText required> 
+                                <label for="float-input">RUC</label>
+                            </span>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.mision" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Misión</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.vision" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Visión</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.nombre" [pKeyFilter]="blockSpecial" maxlength="100" minlength="5" pInputText required> 
+                                <label for="float-input">Nombre o razón social</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.acronimo" [pKeyFilter]="blockSpecial" maxlength="100" minlength="5" pInputText required> 
+                                <label for="float-input">Acrónimo</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.rolComercial" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Actividad comercial</label> 
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="empresa.paginaWeb" maxlength="100" minlength="5" pInputText> 
+                                <label for="float-input">Página web</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input (change)="imageSelected($event)" name="logo" type="file" class="form-control" id="float-input" required/>
+                                <label for="float-input">Logo</label>
+                            </span>
+                            <div *ngIf="file" class="mt-3 text-center">
+                                <img [src]="file" class="rounded" alt="..." style="max-width: 50%;"/>
+                            </div> 
+                        </div>
+                        
+                    </div>
+                    <div class="col">
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.pais" [pKeyFilter]="'alpha'" maxlength="100" minlength="3" pInputText required> 
+                                <label for="float-input">País</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="provincias" [(ngModel)]="empresa.provincia" placeholder="Provincia" [showClear]="true"></p-dropdown>   
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="ciudades" [(ngModel)]="empresa.ciudad" placeholder="Ciudad" [showClear]="true"></p-dropdown>   
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.direccion" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Dirección</label>
+                            </span>
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.codigoPostal" [pKeyFilter]="'int'" maxlength="6" minlength="6" pInputText> 
+                                <label for="float-input">Código postal</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <p-inputMask id="float-input" mask="09-9999999" [(ngModel)]="empresa.telefono" placeholder=""></p-inputMask> 
+                                <label for="float-input">Teléfono</label>
+                            </span>    
+                        </div>    
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label"> 
+                                <p-inputMask mask=" 09-9999-9999" [(ngModel)]="empresa.celular" placeholder=""></p-inputMask>
+                                <label for="float-input">Celular</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class={{verfCorreo}} [(ngModel)]="empresa.correo" (ngModelChange)="validarCorreo()" pInputText> 
+                                <label for="float-input">Correo</label>
+                            </span>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h4 style="text-align: center;">Cuenta bancaria <button pButton type="button" class="p-button-rounded p-button-primary" icon="pi pi-plus" (click)="agregarCuentaBancaria()"></button></h4>
+                        <div class="col">
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" [(ngModel)]="banco" type="text" [pKeyFilter]="'alpha'" maxlength="20" minlength="3" pInputText> 
+                                    <label for="float-input">Banco / Cooperativa</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" [(ngModel)]="tipo" type="text" [pKeyFilter]="'alpha'" maxlength="20" minlength="3" pInputText> 
+                                    <label for="float-input">Tipo cuenta</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" [(ngModel)]="numero" type="text" [pKeyFilter]="'int'" maxlength="20" minlength="3" pInputText> 
+                                    <label for="float-input">Número de cuenta</label>
+                                </span>    
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-3 p-md-4">
+                                <!-- <p-table #dt2 [value]="empresa.cuentasBancarias" dataKey="id2" [rowHover]="true"
+                                    [rows]="5" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [paginator]="true">
+                                    <ng-template pTemplate="caption">
+                                        <div class="table-header">
+                                            Lista de cuentas bancarias
+                                        </div>
+                                    </ng-template>
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>
+                                                Nº
+                                            </th>
+                                            <th>
+                                                Informacion de la cuenta
+                                            </th>
+                                            <th>
+                                                Quitar
+                                            </th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-cuenta let-i="rowIndex">
+                                        <tr class="p-selectable-row">
+                                            <td>
+                                                {{i+1}}
+                                            </td>
+                                            <td>
+                                                {{cuenta}}
+                                            </td>
+                                            <td>
+                                                <button pButton type="button" class="p-button-rounded p-button-danger" icon="pi pi-times" (click)="quitarCuentaBancaria(i)"></button>
+                                            </td>
+                                        </tr>                            
+                                    </ng-template>
+                                    <ng-template pTemplate="emptymessage">
+                                        <tr>
+                                            <td colspan="8">No hay cuentas bancarias</td>
+                                        </tr>
+                                    </ng-template>
+                                </p-table> -->
+                                <table class="table">
+                                    <thead>
+                                      <tr class="table-dark">
+                                        <th scope="col">Nº</th>
+                                        <th scope="col" style="text-align: center;">Información de la cuenta</th>
+                                        <th scope="col">Quitar</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let cuenta of empresa.cuentasBancarias let i = index">
+                                        <th>{{ i+1 }}</th>
+                                        <td>{{ cuenta }}</td>
+                                        <td><button pButton type="button" class="p-button-rounded p-button-danger" icon="pi pi-times" (click)="quitarCuentaBancaria(i)"></button></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                            </div>
+                        </div>                        
+                    </div>
+                
+                </div>
+                <h4 style="text-align: center;">Datos del representante</h4>
+                <div class="row">
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.cedula" [pKeyFilter]="'int'" maxlength="10" minlength="10" pInputText required> 
+                                <label for="float-input">Cédula</label>
+                            </span>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.nombres" [pKeyFilter]="blockSpecial" maxlength="30" minlength="3" pInputText> 
+                                <label for="float-input">Nombres</label>
+                            </span>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.apellidos" [pKeyFilter]="blockSpecial" maxlength="30" minlength="3" pInputText> 
+                                <label for="float-input">Apellidos</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.correo" maxlength="30" minlength="6" pInputText> 
+                                <label for="float-input">Correo</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="date" [(ngModel)]="fechaNacimiento" pInputText> 
+                                <label for="float-input">Fecha de nacimiento</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="generos" [(ngModel)]="persona.genero" placeholder="Género" [showClear]="true"></p-dropdown>   
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.direccion" [pKeyFilter]="blockSpecial" maxlength="40" minlength="10" pInputText> 
+                                <label for="float-input">Dirección</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <p-inputMask id="float-input" mask="09-9999999" [(ngModel)]="persona.telefono" placeholder=""></p-inputMask>
+                                <label for="float-input">Teléfono</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <p-inputMask mask=" 09-9999-9999" [(ngModel)]="persona.celular" placeholder=""></p-inputMask> 
+                                <label for="float-input">Celular</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="usuario.username" [pKeyFilter]="'alphanum'" maxlength="30" minlength="3" pInputText> 
+                                <label for="float-input">Username</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <p-password [toggleMask]="true" [(ngModel)]="usuario.password" [pKeyFilter]="'alphanum'" maxlength="15" minlength="6"></p-password> 
+                                <label for="float-input">Password</label>
+                            </span>    
+                        </div>
+
+                    </div>                   
+                    <br>
+                    <div class="p-col-12 p-md-4">
+                        <button pButton pRipple type="button" label="Registrar Empresa" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="registrarEmpresa()"></button>  
+                    </div>
+                </div>
+            </div>
+        </p-panel>
+    </body>
+</html>

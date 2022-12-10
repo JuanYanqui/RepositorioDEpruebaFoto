@@ -1,0 +1,32 @@
+<div class="card">
+  <div class="card-header">
+    <ul class="nav nav-tabs card-header-tabs">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          aria-current="true"
+          data-bs-toggle="tab"
+          routerLink="./listar"
+          routerLinkActive="active"
+          >Productos</a
+        >
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="./agregar" routerLinkActive="active"
+          >Agregar Productos</a
+        >
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card-body">
+  <div class="tab-content">
+    <div class="tab-pane active" id="registrar">
+
+      <router-outlet   (activate)="onOutletLoaded($event)"  ></router-outlet>
+      <div>
+</div>
+    </div>
+  </div>
+</div>

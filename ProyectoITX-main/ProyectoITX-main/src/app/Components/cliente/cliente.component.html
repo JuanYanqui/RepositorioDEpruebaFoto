@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Clientes</title>
+</head>
+<body>
+  <div class="card text-center ">
+    <div class="card-header">
+      <ul class="nav nav-tabs card-header-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="true" data-bs-toggle="tab" href="./cliente">Registrar</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-bs-toggle="tab" href="./lista-clientes">Listar Clientes</a>
+        </li>
+      </ul>
+    </div>
+  <div class="container">
+    <div class="card-body ">
+      <div class="tab-content">
+        <div class="tab-pane active" id="registrar">
+          <h5 class="card-title">Registrar</h5>
+          <main>
+            <div class="row g-5">
+              <div class="col-12">
+                <form #registrar="ngForm"  class="needs-validation" novalidate>
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="name" class="form-label">Cedula</label>
+                      <!-- <p-button type="button" styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-search" (click)="buscarPorCedula()"></p-button> -->
+                      <input name="cedula" ngModel type="text" class="form-control" id="cedula" [(ngModel)]="persona.cedula" [pKeyFilter]="'int'" maxlength="10" minlength="10" (ngModelChange)="buscarPorCedula()">
+
+                      <div *ngIf="this.cedula===1">
+                        <div class="alertaCedula">
+                              <p class="text-danger">*Complete el campo requerido de la cedula</p>
+                        </div>
+                      </div>
+                      <div class="invalid-feedback">
+                        Valid first name is required.
+                      </div>
+                    </div>
+                    <div class="col-md-4" style="width: 550px;">
+                      <label for="zip" class="form-label">Nombres</label>
+                      <input name="nombres" [(ngModel)]="persona.nombres" type="text" class="form-control" id="nombres" required>
+                      <div *ngIf="this.nombres===1">
+                        <div class="alertaNombres">
+                              <p class="text-danger">*Complete el campo requerido del nombre</p>
+                        </div>
+                      </div>
+                      <div class="invalid-feedback">
+                        Ingrese el nombre del cliente
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" style="width: 550px;">
+                      <label for="zip" class="form-label">Apellidos</label>
+                      <input name="apellidos" [(ngModel)]="persona.apellidos" type="text" class="form-control" id="apellidos" required>
+                      <div class="invalid-feedback">
+                        Ingrese los apellidos del cliente
+                      </div>
+                    </div>
+
+                    <!-- distribuidor -->
+                    <div class="col-md-4" >
+                      <label for="zip" class="form-label">Correo</label>
+                      <input mask="user@gmail.com" name="correo" [(ngModel)]="persona.correo" type="email" class="form-control" id="correo" required>
+                      <div class="invalid-feedback">
+                        Ingrese el correo del cliente
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="zip" class="form-label">Telefono</label>
+                      <p-inputMask id="float-input" mask="09-9999999" [(ngModel)]="persona.telefono" placeholder=""></p-inputMask>
+                      <!-- <input name="telefono" [(ngModel)]="persona.telefono" type="text" class="form-control" id="telefono" required> -->
+                      <div class="invalid-feedback">
+                        Ingrese el telefono del cliente
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="zip" class="form-label">Celular</label>
+                      <p-inputMask mask=" 09-9999-9999" [(ngModel)]="persona.celular" placeholder=""></p-inputMask>
+                      <!-- <input name="celular" [(ngModel)]="persona.celular" type="text" class="form-control" id="celular" required> -->
+                      <div class="invalid-feedback">
+                        Ingrese el celular del cliente
+                      </div>
+                    </div>
+                    <div class="col-md-4" style="width: 550px;">
+                      <label for="zip" class="form-label">Username</label>
+                      <input name="username" [(ngModel)]="usuario.username" type="text" class="form-control" id="username" required>
+                    </div>
+
+                    <div class="col-md-4" style="width: 550px;">
+                      <label for="zip" class="form-label">Password</label>
+                      <p-password [toggleMask]="true" [(ngModel)]="usuario.password" [pKeyFilter]="'alphanum'" maxlength="15" minlength="6"></p-password>
+                      <!-- <input name="password" [(ngModel)]="usuario.password" type="password" class="form-control" id="password" required> -->
+                    </div>
+                  </div>
+                  <!-- descripcion -->
+                  <div class="form-floating mt-3">
+                    <textarea name="direccion" [(ngModel)]="persona.direccion" class="form-control" placeholder="Dirección"
+                      id="floatingTextarea2" style="height: 100px" required></textarea>
+                    <label for="floatingTextarea2">Dirección</label>
+                    <div class="invalid-feedback">
+                      Ingrese la dirección del cliente
+                    </div>
+                  </div>
+                  <div class="form-floating mt-3">
+                    <textarea name="observacion" [(ngModel)]="clientes.observaciones" class="form-control" placeholder="Observaciones"
+                      id="floatingTextarea2" style="height: 100px"></textarea>
+                    <label for="floatingTextarea2">Observación<span class="text-muted"> (Optional)</span></label>
+                  </div>
+                  <hr class="my-4">
+                  <div class="btn-group col-12 " role="group" aria-label="Basic mixed styles example">
+                    <button type="button " class="w-100 m-lg-1 btn btn-primary" (click)="guardarDatos()" type="submit">Guardar Cliente</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </main>
+        </div>
+        <!-- panel 2  listar productos-->
+        <div class="tab-pane" id="listar">
+          <h5 class="card-title mb-3">Clientes</h5>
+          <div class="tab-pane active" id="registrar">
+            <main>
+              <div class="row g-5">
+                <div class="col-12">
+                 </div>
+              </div>
+              <hr class="my-4">
+              <!-- cards productos -->
+            </main>
+          </div>
+        </div>
+      </div>
+    </div>
+     </div>
+    </div>
+</body>
+</html>

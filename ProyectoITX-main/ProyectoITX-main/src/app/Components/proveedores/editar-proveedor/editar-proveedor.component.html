@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We"
+      crossorigin="anonymous"
+    />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proveedor</title>
+  </head>
+  <body>
+    <div *ngIf="this.estadoBtns===1">
+      <button #asbtnVER (click)="verProveedor()"  id="verBTn" type="button " class="w-100 m-lg-1 btn-primary">Ver Proveedor</button>
+      <button #asbtnEDITAR (click)="editarProveedor()" id="editBTn" type="button " class="w-100 m-lg-1 btn btn-success">Editar Proveedor</button>
+      </div>
+      <div *ngIf="this.estadoProveedor===0">
+        <div class="card">
+          <button #asbtnReg (click)="regresarbtn()" id="regreBTn" type="button " class="w-100 m-lg-1 btn-primary">Regresar</button>
+                  <form class="needs-validation" novalidate>
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label for="name" class="form-label">Ruc</label>
+                        <input #asInpRUC name="ruc" [(ngModel)]="proveedor.ruc" type="text" [pKeyFilter]="blockSpecialCedula" class="form-control"id="ruc"required
+                        />
+                        <div class="invalid-feedback">
+                          Ingrese el RUC del proveedor.
+                        </div>
+                      </div>
+                      <div class="col-md-4" style="width: 550px">
+                        <label for="zip" class="form-label"
+                          >Nombre Proveedor</label
+                        >
+                        <input #asInpNOMB [(ngModel)]="proveedor.nombreProveedor" [pKeyFilter]="blockSpecial" name="nombreProveedor"type="text"class="form-control"id="nombreProveedor"required
+                        />
+                        <div class="invalid-feedback">
+                          Ingrese el nombre del proveedor.
+                        </div>
+                      </div>
+
+                      <!-- distribuidor -->
+                      <div class="col-md-4">
+                        <label for="zip" class="form-label">Correo</label>
+                        <input #asInpEMAIL [(ngModel)]="proveedor.emailProveedor" [pKeyFilter]="blockSpecial" name="correo"type="text"class="form-control"id="correo"required/>
+                        <div class="invalid-feedback">
+                          Ingrese el correo  del proveedor
+                        </div>
+                      </div>
+                      <!-- distribuidor -->
+                      <div class="col-md-4">
+                        <label for="zip" class="form-label">Pagina web</label>
+                        <input #asInpWEB [(ngModel)]="proveedor.paginaWeb" [pKeyFilter]="blockSpecial" name="paginaweb"type="text"class="form-control"id="paginaweb"required/>
+                        <div class="invalid-feedback">
+                          Ingrese la pagina web del proveedor
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="zip" class="form-label">Telefono</label>
+                        <input #asInpTELF [(ngModel)]="proveedor.telefonoProveedor" [pKeyFilter]="blockSpecialCedula" name="telefono"type="text"class="form-control"id="telefono"required/>
+                         <div class="invalid-feedback">
+                          Ingrese el telefono del telefono
+                        </div>
+                      </div>
+                      <div class="col-md-4">
+                        <label for="zip" class="form-label">Celular</label>
+
+                        <input #asInpCEL [(ngModel)]="proveedor.celularProveedor" [pKeyFilter]="blockSpecialCedula" name="celular"type="text"class="form-control"id="celular"required/>
+                        <div class="invalid-feedback">
+                          Ingrese el celular del celular
+                        </div>
+                      </div>
+                    </div>
+                    <br />
+                    <hr />
+                    <div class="input-group">
+                    <div class="card-group">
+                      <div>
+                        <label #asSelecTipCuen for="zip" class="form-label"
+                          >Tipo de banco</label>
+                        <select #asInpNOMBANC [(ngModel)]="nombreBanco" name="tipoBanco"class="form-control"id="tipoBanco" >
+                          <option value="Tipo Banco">Tipo de Banco</option>
+                          <option value="Pichincha">Pichincha</option>
+                          <option value="Jep">Jep</option>
+                          <option value="Banco de Guayauil">Banco de Guayaquil</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label #asTipCuent for="zip" class="form-label"
+                          >Tipo de cuenta</label>
+                        <select #asInpTCUEN [(ngModel)]="tipoCuenta" name="tipoCuenta"class="form-control"id="tipoCuenta">
+                          <option value="tipo Cuenta">Tipo de Cuenta</option>
+                          <option value="Corriente">Corriente</option>
+                          <option value="Ahorro">Ahorro</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label #aslblNumCuenta for="zip" class="form-label"
+                          >Numero de cuenta</label>
+                        <input #asInpNUMCU [(ngModel)]="numeroCuenta" [pKeyFilter]="blockSpecialCedula" name="numeroCuenta"type="text"class="form-control"id="numeroCuenta"required/>
+                        <div class="invalid-feedback">
+                          Ingrese el numero de cuenta
+                        </div>
+                      </div>
+                      <div>
+                        <label #aslblNomtit for="zip" class="form-label"
+                          >Nombre del titular</label>
+                        <input #asInpNOMTI [(ngModel)]="nombretitular" [pKeyFilter]="blockSpecial" name="nombrestitular"type="text"class="form-control"id="nombrestitular"required/>
+                        <div class="invalid-feedback">
+                          Ingrese el nombre del titular
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                      <br/>
+                      <hr/>
+                      <div class="btn-group col-12"role="group"aria-label="Basic mixed styles example">
+                        <button #asBtnBNC type="button" class="w-100 m-lg-1 btn btn-primary"type="submit" (click)="agregarBancos()">
+                          Agregar Cuenta Bancaria
+                        </button>
+                      </div>
+                      <ol class="row row-cols-1 row-cols-md-3 g-4">
+                        <li *ngFor="let i of listBancos;let j= index" class="list-group-item d-flex justify-content-between align-items-start">
+                          <div class="ms-2 me-auto">
+                            <div class="fw-bold">Cuenta Bancaria</div>
+                             {{i}}
+                            <p><button #asBtnBNCDE type="button" id="eliminarbtn" (click)="eliminarcuentaBanco(j)" class="danger">Borrar</button></p>
+                          </div>
+                        </li>
+                         </ol>
+                      <div class="form-floating mt-3">
+                        <textarea #asInpOBSER name="observaciones" [(ngModel)]="proveedor.observaciones" class="form-control" placeholder="Observaciones"
+                          id="floatingTextarea2" style="height: 100px" required></textarea>
+                        <label for="floatingTextarea2">Observaciones</label>
+                        <div class="invalid-feedback">
+                          Ingrese las Observaciones del proveedor
+                        </div>
+                      </div>
+                    <hr class="my-4" />
+                    <div class="btn-group col-12"role="group"aria-label="Basic mixed styles example" >
+                      <button  #asBtnSAVE (click)="actualizarProveedor()" type="button"class="w-100 m-lg-1 btn btn-primary"type="submit">
+                        Guardar Proveedor
+                      </button>
+                    </div>
+                  </form>
+                  <p-table #dt [value]="listaProveedores" dataKey="id" [rowHover]="true" [rows]="10"
+                  [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]"  [paginator]="true"
+                  [loading]="loading"
+                  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+                  [globalFilterFields]="['idProveedor','nombreProveedor','celularProveedor','estado']">
+                  <ng-template pTemplate="caption">
+                      <div class="table-header">
+                          <span class="p-input-icon-right">
+                              <i class="pi pi-search"></i>
+                              <input pInputText type="text"
+                                  (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+                                  placeholder="Global search" />
+                          </span>
+                      </div>
+                  </ng-template>
+                  <ng-template pTemplate="header">
+                      <tr>
+                          <th pSortableColumn="idPersona">
+                              <div class="p-d-flex p-jc-between p-ai-center">
+                                  Nombre
+                             </div>
+                          </th>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="body" let-proveedores>
+                      <tr class="p-selectable-row">
+                          <td  >
+                              {{proveedores.id}}
+                          </td>
+                          <td  >
+                            {{proveedores.nombre}}
+                        </td>
+                      </tr>
+                  </ng-template>
+                  <ng-template pTemplate="emptymessage">
+                      <tr>
+                          <td colspan="8">No se encontraron productos del proveedores</td>
+                      </tr>
+                  </ng-template>
+                  </p-table>
+                  </div>
+                  </div>
+  </body>
+</html>

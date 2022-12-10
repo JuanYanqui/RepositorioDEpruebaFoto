@@ -1,0 +1,138 @@
+<html>
+    <header></header>
+    <body>
+        <div class="container">
+            <p-table #dt2 [value]="listaPedidos" dataKey="id" [rowHover]="true" [rows]="10"
+            [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+            [globalFilterFields]="['cedula','nombre']">
+            <ng-template pTemplate="caption">
+                <div class="table-header">
+                    <!-- <span class="p-input-icon-right">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text"
+                            (input)="dt2.filterGlobal($any($event.target).value, 'contains')"
+                            placeholder="Buscar..." />
+                    </span> -->
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Cédula cliente
+                            <p-sortIcon field="cedula"></p-sortIcon>
+                            <p-columnFilter type="text" field="cedula" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Fecha pedido
+                            <p-sortIcon field="fecha"></p-sortIcon>
+                            <p-columnFilter type="date" field="fecha" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th>
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Estado pedido
+                        </div>
+                    </th>
+                    <th>
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Ver pedido
+                        </div>
+                    </th>
+                    <th>
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Cancelar pedido
+                        </div>
+                    </th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-pedido>
+                <tr class="p-selectable-row">
+
+                    <td>
+                        {{pedido.cliente?.usuario?.persona?.cedula}}
+                    </td>
+                    <td>
+                        {{pedido.fechaPedido}}
+                    </td>
+                    <td>
+                        <div *ngIf='obtenerEstado(pedido.revicion, pedido.aceptacion) === "ACEPTADO"' pTooltip="Revisado el {{pedido.fechaRevicion}} la entrega esta {{verificarEntrega()}}" placeholder="Right"><b style="color: rgb(82, 160, 4);">ACEPTADO</b></div>
+                        <div *ngIf='obtenerEstado(pedido.revicion, pedido.aceptacion) === "RECHAZADO"' pTooltip="Revisado el {{pedido.fechaRevicion}}" placeholder="Right"><b style="color: red;">RECHAZADO</b></div>
+                        <div *ngIf='obtenerEstado(pedido.revicion, pedido.aceptacion) === "PENDIENTE"'><b style="color: orange;">PENDIENTE</b></div>
+                        <div *ngIf='obtenerEstado(pedido.revicion, pedido.aceptacion) === "CANCELADO"'><b style="color: red;">CANCELADO</b></div>
+                    </td>
+                    <td style="text-align: center">
+                        <button pButton pRipple type="button" icon="pi pi-eye" label="Ver pedido" (click)='verPedido(pedido)'></button>
+                    </td>
+                    <td style="text-align: center">
+                        <div *ngIf='obtenerEstado(pedido.revicion, pedido.aceptacion) === "PENDIENTE"; else revisado'>
+                            <button pButton pRipple type="button" icon="pi pi-times" label="Cancelar pedido" class="p-button-danger" (click)='cancelarPedido(pedido)'></button>
+                        </div>
+                        <ng-template #revisado>
+                            <div *ngIf='obtenerEstado(pedido.revicion, pedido.aceptacion) === "CANCELADO"; else nothing'>
+                                <button pButton pRipple type="button" icon="pi pi-check" label="Habilitar pedido" class="p-button-warning" (click)='habilitarPedido(pedido)'></button>
+                            </div>
+                            <ng-template #nothing>
+                                <button pButton pRipple type="button" icon="pi pi-check" label="Pedido revisado!" class="p-button-success" disabled></button>
+                            </ng-template>
+                            
+                        </ng-template>                        
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No se encontraron pedidos</td>
+                </tr>
+            </ng-template>
+        </p-table>
+        </div>
+    </body>
+
+    <p-dialog header="Pedido" [(visible)]="displayVP" [modal]="true" [style]="{width: '75vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+        <ng-template pTemplate="body">
+                    
+            <p-table [value]="listaItemsPedido" [scrollable]="true" scrollHeight="400px">
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="min-width:200px">Nombre</th>
+                        <th style="min-width:200px">Imagen</th>
+                        <th style="min-width:200px">Precio</th>
+                        <th style="min-width:200px">Categorias</th>
+                        <th style="min-width:200px">Tipo</th>
+                        <th style="min-width:200px">Cantidad</th>
+                        <th style="min-width:200px">Unidades</th>
+                        <th style="min-width:200px">Subtotal</th>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-item>
+                    <tr>
+                        <td style="min-width:200px">{{item.producto?.nombre}}</td>
+                        <td style="min-width:200px"><img [src]="item.producto?.imagen" [alt]="item.producto?.nombre" width="100" class="p-shadow-4" /></td>
+                        <td style="min-width:200px">{{item.precio | currency:'USD'}}</td>
+                        <td style="min-width:200px">
+                            <tr *ngFor='let tag of item.producto?.categorias'>
+                                <td>{{tag.nombre}}</td>
+                            </tr>
+                        </td>
+                        <td style="min-width:200px">{{item.tipoUnidad}}</td>
+                        <td style="min-width:200px">{{item.cantidad}}</td>
+                        <td style="min-width:200px">{{item.unidadTotal}}</td>
+                        <td style="min-width:200px">{{item.precio * item.unidadTotal | currency:'USD'}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        En total se han elegido {{listaItemsPedido ? listaItemsPedido.length : 0 }} productos  productos con un valor TOTAL: {{calcularValorTotalItems() | currency:'USD'}}
+                    </div>
+                </ng-template>
+            </p-table>
+        </ng-template>
+    </p-dialog>
+
+</html>

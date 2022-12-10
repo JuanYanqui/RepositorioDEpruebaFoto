@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+  <title>Configuraciones</title>
+</head>
+<body>
+<br>
+<div class="input-group mb-3" id="grupcards"  style="width: 900px;">
+  <div class="card" >
+    <div class="card-body" style="width: 150px;">
+      <button pButton type="button" (click)="menuproductos()" label="Productos" icon="pi pi-briefcase" class="p-button-text"></button>
+      <br>
+      <button pButton type="button" (click)="menupersonal()" label="Personal" icon="pi pi-user" class="p-button-text"></button>
+      <br>
+      <button pButton type="button" (click)="menuotros()" label="Otros" icon="pi pi-folder" class="p-button-text"></button>
+      </div>
+  </div>
+  <div id="menudesplegable" style="width: 530px;">
+    <div id="Productos" class="Productos" style="width: inherit;" *ngIf="menuProductos===1">
+      <button _ngcontent-drb-c58="" (click)="actualizaEmpresa()" pbutton="" pripple="" type="button" label="Success" class="p-element p-ripple p-button-outlined p-button-rounded p-button-success p-button p-component"><span class="p-button-label">Guardar Cambios de los Productos</span><span class="p-ink" style="height: 78px; width: 78px; top: -15.9844px; left: 290px;"></span></button>
+      <br>
+      <label for="">Productos</label>
+      <br>
+      <br>
+      <div class="input-group mb-3">
+        <input [(ngModel)]="empresa.iva"  type="number" class="form-control" placeholder="iva" aria-label="iva del producto" aria-describedby="basic-addon2">
+        <span class="input-group-text" id="basic-addon2">%</span>
+      </div>
+      <br>
+      <label for="">Categorias</label>
+      <br>
+      <br>
+      <input type="text" [(ngModel)]="categoriatxt" class="form-control" id="floatingInputValue" placeholder="Categoria" >
+      <button pButton type="button" label="Agregar" (click)="agregarCategoria()" icon="pi pi-plus" class="p-button-text"></button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let j of categoriaArray; let i=index">
+            <td>{{i}}</td>
+            <td>{{j.nombre}}</td>
+            <td *ngIf="j.eliminar===1"><button pButton type="button" (click)="eliminarCategoria(i,j.nombre)" label="Eliminar" icon="pi pi-trash" class="p-button-text"></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="Personal" style="width: inherit;" *ngIf="menuPersonal===1">
+      <button _ngcontent-drb-c58="" (click)="actualizarPersonal()" pbutton="" pripple="" type="button" label="Success" class="p-element p-ripple p-button-outlined p-button-rounded p-button-success p-button p-component"><span class="p-button-label">Guardar Cambios del Personal</span><span class="p-ink" style="height: 78px; width: 78px; top: -15.9844px; left: 290px;"></span></button>
+      <br>
+      <label for="">Personal</label>
+      <br>
+      <br>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="personaltxt" class="form-control" placeholder="Cargos del Personal" aria-label="Cargos del personal" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="descripcionpersonaltxt" class="form-control" placeholder="Descripción del Cargo" aria-label="Descripción del Cargo" aria-describedby="basic-addon2">
+      </div>
+      <br>
+      <button pButton type="button" label="Agregar" (click)="agregarCargosPersonal()" icon="pi pi-plus" class="p-button-text"></button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Categoria</th>
+            <th scope="col">Descripción</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let jp of personalArray; let ip=index">
+            <td>{{ip}}</td>
+            <td>{{jp.nombre}}</td>
+            <td>{{jp.descripcion}}</td>
+            <td *ngIf="jp.eliminar==1"><button pButton type="button" (click)="eliminarCargoPersonal(ip,jp.nombre)" label="Eliminar" icon="pi pi-trash" class="p-button-text"></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="Otros" *ngIf="menuOtros===1">
+      <button _ngcontent-drb-c58="" (click)="actualizarEmpresa()" pbutton="" pripple="" type="button" label="Success" class="p-element p-ripple p-button-outlined p-button-rounded p-button-success p-button p-component"><span class="p-button-label">Guardar Cambios</span><span class="p-ink" style="height: 78px; width: 78px; top: -15.9844px; left: 290px;"></span></button>
+      <br>
+      <label for="">Empresa</label>
+      <br>
+      <br>
+      <label for="">Datos Generales</label>
+      <br>
+      <br>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.codigoPostal" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.direccion" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.mision" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.vision" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.rolComercial" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.paginaWeb" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <br>
+      <br>
+      <label for="">Contactos</label>
+      <br>
+      <br>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.celular" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.correo" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <div class="input-group mb-3">
+        <input type="text" [(ngModel)]="empresa.telefono" class="form-control" placeholder="Ciudades" aria-label="Ciudades" aria-describedby="basic-addon2">
+      </div>
+      <br>
+      <br>
+      <label for="">Cuentas Bancarias</label>
+      <br>
+      <br>
+      <div class="input-group mb-3">
+        <select class="form-select" [(ngModel)]="tipoBanco" aria-label="Default select example">
+          <option selected>Bancos</option>
+          <option value="Pichincha">Pichincha</option>
+          <option value="Jep">Jep</option>
+          <option value="Banco de Guayaquil">Banco de Guayaquil</option>
+        </select>
+        <select class="form-select" [(ngModel)]="tipoCuenta" aria-label="Default select example">
+          <option selected>Tipo de Cuenta</option>
+          <option value="Corriente">Corriente</option>
+          <option value="Ahorro">Ahorro</option>
+        </select>
+        <input type="text" [(ngModel)]="numeroCuenta" class="form-control" placeholder="Numero Cuenta" aria-label="Numero Cuenta" aria-describedby="basic-addon2">
+      </div>
+      <button pButton type="button" label="Agregar" (click)="agregarBancos()" icon="pi pi-plus" class="p-button-text"></button>
+      <table class="table">
+        <thead>
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Banco</th>
+            <th scope="col">Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let jc of bancoArray; let ic=index">
+            <td>{{ic}}</td>
+            <td>{{jc}}</td>
+            <td ><button pButton type="button" (click)="eliminarCiudades(ic)" label="Eliminar" icon="pi pi-trash" class="p-button-text"></button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+</body>
+</html>
+

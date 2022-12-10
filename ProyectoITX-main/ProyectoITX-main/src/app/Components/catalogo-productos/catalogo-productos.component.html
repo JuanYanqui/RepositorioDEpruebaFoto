@@ -1,0 +1,84 @@
+<html>
+    <header>
+
+    </header>
+    <body>
+        <div class="card">
+            <p-dataView #dv [value]="listaProductos" [paginator]="true" [rows]="9" filterBy="name"
+                [sortField]="sortField" [sortOrder]="sortOrder" layout="list">
+                <ng-template pTemplate="header">
+                    <div class="p-d-flex p-flex-column p-flex-md-row p-jc-md-between">
+                        <div style="float: right;">
+                            <p-button icon="pi pi-times" styleClass="p-button-danger" pTooltip="Vaciar el pedido" tooltipPosition="top" (click)='vaciarPedido()'></p-button>
+                            <p-button label="Ver pedido" icon="pi pi-shopping-cart" styleClass="p-button-warning" badge='{{numItems}}' badgeClass="p-badge-danger" (click)='verPedido()'></p-button>
+                        </div>             
+                        
+                        <span class="p-input-icon-left p-mb-2 p-mb-md-0">
+                            <i class="pi pi-search"></i>
+                            <input type="search" pInputText placeholder="Search by Name" (input)="dv.filter($any($event.target).value)">
+                        </span>
+                        
+                        <p-dataViewLayoutOptions style="text-align: center;"></p-dataViewLayoutOptions>                 
+                    </div>
+                </ng-template>
+                <ng-template let-producto pTemplate="listItem">
+                    <div class="p-col-12">
+                        <div class="product-list-item">
+                            <img src="{{producto.imagen}}" class="product-image"/>
+                            <div class="product-list-detail">
+                                <div class="product-name">{{producto.nombre}}</div>
+                                <div class="product-description">{{producto.descripcion}}</div>
+                                
+                                <i class="pi pi-tag product-category-icon"></i>
+                                <span class="product-category">
+                                    <div *ngFor='let tag of producto.categorias'>
+                                        {{tag.nombre}}
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="product-list-action">
+                                <span class="product-price">$ {{producto.precio_venta}}</span>
+                                <div *ngIf='evitarRepetido(producto.id)===false'>
+                                    <p-button icon="pi pi-shopping-cart" label="Agregar al pedido" [disabled]="!producto.estado" (click)='agregarAlPedido(producto)'></p-button>
+                                </div>
+                                <div *ngIf='evitarRepetido(producto.id)===true'>
+                                    <p-button icon="pi pi-check" label="Se encuentra agregado" styleClass="p-button-success" [disabled]=true></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+                <ng-template let-producto pTemplate="gridItem">
+                    <div class="p-col-12 p-md-4">
+                        <div class="product-grid-item card">
+                            <div class="product-grid-item-top">
+                                <div>
+                                    <i class="pi pi-tag product-category-icon"></i>
+                                    <span class="product-category">
+                                        <div *ngFor='let tag of producto.categorias'>
+                                            {{tag.nombre}}
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="product-grid-item-content">
+                                <img [src]="producto.imagen" [alt]="producto.nombre" class="product-image"/>
+                                <div class="product-name">{{producto.nombre}}</div>
+                                <div class="product-description">{{producto.descripcion}}</div>
+                            </div>
+                            <div class="product-grid-item-bottom">
+                                <span class="product-price">$ {{producto.precio_venta}}</span>
+                                <div *ngIf='evitarRepetido(producto.id)===false'>
+                                    <p-button icon="pi pi-shopping-cart" [disabled]="!producto.estado" (click)='agregarAlPedido(producto)'></p-button>
+                                </div>
+                                <div *ngIf='evitarRepetido(producto.id)===true'>
+                                    <p-button icon="pi pi-check" styleClass="p-button-success" [disabled]=true></p-button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </p-dataView>
+        </div>
+    </body>
+</html>

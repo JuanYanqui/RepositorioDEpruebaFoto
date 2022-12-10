@@ -1,0 +1,492 @@
+<div class="container tab-pane active">
+  <!-- {{ member }} -->
+  <main>
+    <div class="row g-5">
+      <div class="col-12">
+        <form [formGroup]="productoForm" (ngSubmit)="addProducto()" class="needs-validation" novalidate>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label for="nombre" class="form-label">Nombre</label>
+              <input name="nombre" #nombre formControlName="nombre" type="text" class="form-control" id="nombre" required [ngClass]="{
+                  'is-invalid':
+                    formValues.nombre.touched && formValues.nombre.errors,
+                  'is-valid': formValues.nombre.valid
+                }" />
+              <div class="invalid-feedback">Ingrese un nombre al producto</div>
+            </div>
+            <div class="col-md-6">
+              <label for="codigo" class="form-label">Codigo</label>
+              <input name="codigo" #codigo formControlName="codigo" type="text" class="form-control" id="codigo" required  [ngClass]="{
+                  'is-invalid':
+                    formValues.codigo.touched && formValues.codigo.errors,
+                  'is-valid': formValues.codigo.valid
+                }" />
+              <div class="invalid-feedback"  *ngIf="formValues.codigo.errors?.required">Ingrese un codigo.</div>
+                  <div class="invalid-feedback" *ngIf="formValues.codigo.errors?.maxlength">
+                    Ingrese solo 25 caracteres.
+                  </div>
+            </div>
+            <!-- descripcion -->
+            <div class="form-floating mt-3">
+              <textarea required name="descripcion" #descripcion formControlName="descripcion" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px" [ngClass]="{
+                  'is-invalid':
+                    formValues.descripcion.touched &&
+                    formValues.descripcion.errors,
+
+                  'is-valid': formValues.descripcion.valid
+                }"></textarea>
+              <label for="floatingTextarea2">Descripcion<span class="text-muted"></span></label>
+              <div class="invalid-feedback">
+                Ingrese una descripcion del producto (Presentación del producto)
+              </div>
+            </div>
+
+            <!-- precios -->
+            <div class="col-md-4">
+              <label for="peso" class="form-label">Peso neto (Kg)</label>
+              <input pKeyFilter="num"  name="peso" #peso formControlName="peso" class="form-control" id="peso" required [ngClass]="{
+                  'is-invalid':
+                    formValues.peso.touched && formValues.peso.errors,
+                  'is-valid': formValues.peso.valid
+                }" />
+              <div class="invalid-feedback" *ngIf="formValues.peso.errors?.required">
+                Ingrese el peso del producto.
+              </div>
+              <div class="invalid-feedback" *ngIf="formValues.peso.errors?.pattern">
+                Ingrese valores numericos.
+              </div>
+                  <span class="invalid-feedback" *ngIf="formValues.peso.errors?.maxlength">
+                    Ingrese 6 caracteres.
+                  </span>
+            </div>
+
+            <div class="col-md-3">
+              <label for="precio_venta" class="form-label">Precio de venta</label>
+              <input name="precio_venta" pKeyFilter="num"  #precio_venta formControlName="precio_venta" class="form-control" id="precio_venta" required [ngClass]="{
+                  'is-invalid':
+                    formValues.precio_venta.touched &&
+                    formValues.precio_venta.errors,
+                  'is-valid': formValues.precio_venta.valid
+                }" />
+
+              <div class="invalid-feedback" *ngIf="formValues.precio_venta.errors?.required">
+                Ingrese el precio de venta del producto.
+              </div>
+              <div class="invalid-feedback" *ngIf="formValues.precio_venta.errors?.pattern">
+                Ingrese valores numericos.
+              </div>
+                      <div class="invalid-feedback" *ngIf="formValues.precio_venta.errors?.maxlength">
+                        Ingrese 4 caracteres.
+                      </div>
+            </div>
+
+            <div class="col-md-3">
+              <label for="oferta_descuento" class="form-label">Valor Descuento (%)</label>
+              <input pKeyFilter="num"  name="oferta_descuento" #oferta_descuento formControlName="oferta_descuento" class="form-control" id="oferta_descuento" required [ngClass]="{
+                  'is-invalid':
+                    formValues.oferta_descuento.touched &&
+                    formValues.oferta_descuento.errors,
+                  'is-valid': formValues.oferta_descuento.valid
+                }" />
+              <div class="invalid-feedback" *ngIf="formValues.oferta_descuento.errors?.required">
+                Ingrese el la valor de descuento del producto.
+              </div>
+              <div class="invalid-feedback" *ngIf="formValues.oferta_descuento.errors?.pattern">
+                Ingrese valores numericos.
+              </div>
+                <div class="invalid-feedback" *ngIf="formValues.oferta_descuento.errors?.maxlength">
+                  Ingrese 3 caracteres.
+                </div>
+            </div>
+            <div class="col-md-2">
+              <label for="precio_compra" class="form-label">Precio de compra x unidad</label>
+              <input pKeyFilter="num"  name="precio_compra" #precio_compra formControlName="precio_compra" class="form-control" id="precio_compra" required [ngClass]="{
+                              'is-invalid':
+                                formValues.precio_compra.touched &&
+                                formValues.precio_compra.errors,
+                              'is-valid': formValues.precio_compra.valid
+                            }" />
+              <div class="invalid-feedback" *ngIf="formValues.precio_compra.errors?.required">
+                Ingrese el precio de compra del producto.
+              </div>
+              <div class="invalid-feedback" *ngIf="formValues.precio_compra.errors?.pattern">
+                Ingrese valores numericos.
+              </div>
+                <div class="invalid-feedback" *ngIf="formValues.precio_compra.errors?.maxlength">
+                  Ingrese 4 caracteres.
+                </div>
+            </div>
+            <!--! /////////unidades de medida//////////////// --->
+            <div class="card col-12">
+              <p-toolbar>
+                <div class="p-toolbar-group-left">
+                  <p-button pRipple [disabled]=' !formValues.precio_compra.valid || btnAddunidades ' label="Unidades del producto" icon="pi pi-plus" styleClass="p-button-success" icon="pi pi-plus" (click)="onAdad2(formValues.precio_compra.valid,unidadesDetails.controls.length)">
+                  </p-button>
+                </div>
+                <div class="p-toolbar-group-right">
+                  <div *ngIf="!unidadesForm.valid; else d">
+                    <p-message *ngIf="!unidadesForm.valid || !btnAddunidades " severity="info" text="Ingrese unidades de medida para el producto" styleClass="p-mr-2">
+                    </p-message>
+                  </div>
+                  <ng-template #d>
+                    <p-message *ngIf="!formValues.precio_compra.valid " severity="warn" text="Primero ingrese un precio de compra por unidad" styleClass="p-mr-2">
+                    </p-message>
+                  </ng-template>
+
+
+                </div>
+              </p-toolbar>
+              <ng-container *ngIf="unidadesDetails.controls.length > 0">
+                <div>
+                  <form [formGroup]="unidadesForm">
+                    <div formArrayName="unidadesDetails">
+                      <p-table styleClass="p-datatable-sm " responsiveLayout="scroll" [value]="unidadesDetails.controls" [(selection)]="selectedUnidad">
+                        <ng-template pTemplate="header">
+                          <tr>
+                            <th class="text-center" style="width: 3.35625rem"></th>
+                            <th class="text-center" style="width: 34.159375rem">
+                              Nombre
+                            </th>
+                            <th class="text-center" style="width: 9.35625rem">
+                              Equivalencia
+                            </th>
+                            <th class="text-center" style="width: 34.004375rem">
+                              Valor equivalencia
+                            </th>
+                          </tr>
+                        </ng-template>
+
+                        <ng-template pTemplate="body" let-controls let-i="rowIndex">
+                          <tr [formGroupName]="i">
+                            <td>
+                              <button pButton pRipple (click)="onDelete2(i + 1)" [value]="i + 1" type="button" icon="pi pi-times" class="
+                                  p-button-rounded p-button-danger p-button-sm
+                                "></button>
+                            </td>
+                            <td>
+                              <input type="text" name="nombre" id="nombre" #nombre required (change)="somethingChanged($event)" formControlName="nombre" class="form-control" required [ngClass]="{
+                                  'is-invalid':
+                                    unidadDetailsControls(i)?.nombre.touched &&
+                                    unidadDetailsControls(i)?.nombre.errors,
+                                  'is-valid':
+                                    unidadDetailsControls(i)?.nombre.valid
+                                }" />
+                            </td>
+                            <td>
+                              <label controlName="equivalencia" name="equivalencia" id="equivalencia" #equivalencia class="form-control" required severity="success" [ngClass]="{
+                                  'is-invalid':
+                                    unidadDetailsControls(i)?.equivalencia
+                                      .touched &&
+                                    unidadDetailsControls(i)?.equivalencia
+                                      .errors,
+                                  'is-valid':
+                                    unidadDetailsControls(i)?.equivalencia.valid
+                                }">
+                              </label>
+                              <!-- <input type="text" name="equivalencia" id="equivalencia" #equivalencia
+                                formControlName="equivalencia" class="form-control" required [ngClass]="{
+                                  'is-invalid':
+                                    unidadDetailsControls(i)?.equivalencia
+                                      .touched &&
+                                    unidadDetailsControls(i)?.equivalencia
+                                      .errors,
+                                  'is-valid':
+                                    unidadDetailsControls(i)?.equivalencia.valid
+                                }" /> -->
+                            </td>
+                            <td>
+                              <input type="text" pKeyFilter="num"  name="valor_equivalencia" id="valor_equivalencia" #valor_equivalencia formControlName="valor_equivalencia" class="form-control" required [ngClass]="{
+                                  'is-invalid':
+                                    unidadDetailsControls(i)?.valor_equivalencia
+                                      .touched &&
+                                    unidadDetailsControls(i)?.valor_equivalencia
+                                      .errors,
+                                  'is-valid':
+                                    unidadDetailsControls(i)?.valor_equivalencia
+                                      .valid
+                                }" />
+
+                            </td>
+                          </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                          <div class="row row-cols-auto">
+                            <div class="col-sm-auto">
+                              <button pButton pRipple class="p-button-rounded p-button-success" icon="pi pi-plus" [disabled]="btnAddunidades || !formValues.precio_compra.valid" type="button" (click)="onAdad2(formValues.precio_compra.valid,unidadesDetails.controls.length)"></button>
+                            </div>
+                            <div class="col-sm-9">
+                              <div class="row row-cols-auto">
+                                <div class="col-8 col-sm-6">
+                                  Total unidades de medidad asignadas al producto:
+                                  {{
+                                  unidadesDetails.controls
+                                  ? unidadesDetails.controls.length
+                                  : -1
+                                  }}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </ng-template>
+                      </p-table>
+                    </div>
+                  </form>
+                </div>
+              </ng-container>
+            </div>
+            <div></div>
+
+            <!--! /////////unidades de medida////////// --->
+            <!-- proveedor -->
+            <div class="col-md-6">
+              <label for="proveedores" class="form-label">Proveedor</label>
+              <select (change)="selectProveedor($event)" name="proveedores" #proveedor formControlName="proveedores" class="form-select" id="proveedores" required>
+                <option selected disabled value="">Choose...</option>
+                <option *ngFor="let proveedor of proveedores$; let i = index" [value]="i">
+                  {{ proveedor.nombreProveedor }}
+                </option>
+              </select>
+              <div class="invalid-feedback">
+                Porfavor seleccione un proveedor
+              </div>
+            </div>
+
+            <!-- categoria -->
+            <div class="col-md-6">
+              <label for="categorias" class="form-label">Categoría</label>
+              <select (change)="selectCategoria($event)" #categorias name="categorias" formControlName="categorias" class="form-select" id="categorias" required>
+                <option selected disabled value="">Choose...</option>
+                <option *ngFor="let categoria of categorias$; let i = index" [value]="i">
+                  {{ categoria.nombre }}
+                </option>
+              </select>
+              <div class="invalid-feedback">
+                Porfavor seleccione una categoria
+              </div>
+            </div>
+            <!-- ? lista de proveedores -->
+            <div class="col-md-6 ">
+              <div *ngIf="proveedors.length > 0">
+                <ul class="list-group">
+                  <li *ngFor="let proveedores of proveedors; let i = index" class="
+                      list-group-item
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                    ">
+                    {{ proveedores.nombreProveedor }}
+                    <span class="">
+                      <button pButton pRipple class="p-button-rounded p-button-danger" icon="pi pi-times" style="font-size: 2rem" type="button" styleClass="p-button-sm" (click)="delete(i, 'p')"></button>
+                    </span>
+
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!--  ? termina lista proveedores-->
+            <!--? lista categorias -->
+            <div class="col-md-6">
+              <div *ngIf="categories.length > 0">
+                <ul class="list-group">
+                  <li *ngFor="let categoria of categories; let i = index" class="
+                      list-group-item
+                      d-flex
+                      justify-content-between
+                      align-items-center
+                    ">
+                    {{ categoria.nombre }}
+                    <span class="">
+                      <button pButton pRipple class="p-button-rounded p-button-danger" icon="pi pi-times" style="font-size: 2rem" type="button" styleClass="p-button-sm" (click)="delete(i, 'c')"></button>
+                    </span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <!--? termina lista categorias -->
+          </div>
+
+          <!--? ///////precios de venta///// --->
+          <div  *ngIf='formValues.precio_venta.valid' class="p-field-checkbox p-col-12">
+            <p-checkbox (onChange)="cambio(showMe ? 'A' : 'B')" id="remember" [binary]="true" [(ngModel)]="showMe" [ngModelOptions]="{ standalone: true }">
+            </p-checkbox>
+            <label for="remember" class="p-checkbox-label">
+              Agregar más precios de venta</label>
+          </div>
+          <div *ngIf="!showMe; else e"></div>
+          <ng-template #e>
+            <div class="card mt-3">
+              <p-toolbar>
+                <div class="p-toolbar-group-left">
+                  <p-button value="Click" styleClass="p-mr-6" label="Precios de venta" icon="pi pi-plus" styleClass="p-button-success" [disabled]="btnAddPrecios_ventas" type="button" icon="pi pi-plus" class="p-button-rounded" (click)="onAdad()">
+                  </p-button>
+                </div>
+
+                <div class="p-toolbar-group-right">
+                  <div *ngIf="!priceForm.valid">
+                    <p-message severity="info" text="Ingrese valores a los precios de venta." styleClass="p-mr-2">
+                    </p-message>
+                  </div>
+
+                </div>
+              </p-toolbar>
+
+              <div *ngIf="pricesDetails.controls.length > 0">
+                <form [formGroup]="priceForm" #myForm="ngForm">
+                  <div formArrayName="pricesDetails">
+                    <p-table styleClass="p-datatable-sm " responsiveLayout="scroll" [value]="pricesDetails.controls" [(selection)]="selectedPrice">
+                      <ng-template pTemplate="header">
+                        <tr>
+                          <th class="text-center" style="width: 3.35625rem"></th>
+                          <th class="text-center" style="width: 37.159375rem">
+                            Tipo de precio
+                          </th>
+                          <!-- <th class="text-center" style="width: 3.35625rem">
+                            <button pButton pRipple [disabled]="btnAddPrecios_ventas" type="button" icon="pi pi-plus"
+                              class="p-button-rounded" (click)="onAdad()"></button>
+                          </th> -->
+                          <th class="text-center" style="width: 37.004375rem">
+                            Valor
+                          </th>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="body" let-controls let-i="rowIndex">
+                        <tr [formGroupName]="i">
+                          <td>
+                            <button pButton pRipple (click)="onDelete(i + 1)" [value]="i + 1" type="button" icon="pi pi-times" class="
+                                p-button-rounded p-button-danger p-button-sm
+                              "></button>
+                          </td>
+                          <td>
+                            <input  type="text" name="precio" id="precio" #precio required formControlName="precio" class="form-control" required [ngClass]="{
+                                'is-invalid':
+                                  priceDetailsControls(i)?.precio.touched &&
+                                  priceDetailsControls(i)?.precio.errors,
+                                'is-valid':
+                                  priceDetailsControls(i)?.precio.valid
+                              }" />
+                          </td>
+                          <!-- <td></td> -->
+                          <td>
+                            <input type="text" pKeyFilter="num"  name="valor" id="valor" #valor formControlName="valor" class="form-control" required [ngClass]="{
+                                'is-invalid':
+                                 ( priceDetailsControls(i)?.valor.touched &&
+                                  priceDetailsControls(i)?.valor.errors )|| (formValues.precio_compra.value > this.priceForm.get('pricesDetails')?.value[pricesDetails.controls.length-1]?.valor && priceDetailsControls(i)?.valor.touched),
+                                'is-valid': priceDetailsControls(i)?.valor.valid && formValues.precio_compra.value <= this.priceForm.get('pricesDetails')?.value[pricesDetails.controls.length-1]?.valor
+                              }" />
+                          </td>
+                        </tr>
+                      </ng-template>
+                      <ng-template pTemplate="summary">
+                        <div class="row row-cols-auto">
+
+                          <div class="col-sm-1">
+                            <button pButton pRipple class="p-button-rounded p-button-success" icon="pi pi-plus" [disabled]="btnAddPrecios_ventas" type="button" (click)="onAdad()"></button>
+                          </div>
+
+                          <div class="col-sm-11">
+                            <div class="row row-cols-auto">
+                              <div class="col-8 col-sm-6">
+                                Total precios de venta adicionales:
+                                {{
+                                pricesDetails.controls
+                                ? pricesDetails.controls.length
+                                : -1
+                                }}
+                              </div>
+                              <div class="col-sm-6" *ngIf=" formValues.precio_compra.value > this.priceForm.get('pricesDetails')?.value[pricesDetails.controls.length-1]?.valor &&  priceDetailsControls(pricesDetails.controls.length-1)?.valor.valid">
+                                <p-message severity="error" text="No se puede ingresar valores menores al precio de compra." styleClass="p-mr-2">
+                                </p-message>
+                              </div>
+                              <div class="col-sm-6" *ngIf="priceDetailsControls(pricesDetails.controls.length-1)?.valor.touched &&
+                                  priceDetailsControls(pricesDetails.controls.length-1)?.valor.errors?.pattern">
+                                <p-message severity="error" text="Ingrese solo valores numéricos." styleClass="p-mr-2">
+                                </p-message>
+                              </div>
+                              <div class="col-sm-6" *ngIf="
+                                                                priceDetailsControls(pricesDetails.controls.length-1)?.valor.errors?.maxlength ">
+                                <p-message severity="error" text="Ingrese solo 4 caracteres." styleClass="p-mr-2">
+                                </p-message>
+                              </div>
+                            </div>
+                          </div>
+
+                        </div>
+
+                      </ng-template>
+                    </p-table>
+                  </div>
+                </form>
+              </div>
+            </div>
+            <div>
+              {{ data }}
+            </div>
+          </ng-template>
+          <!--? ///////precios de venta/////// --->
+          <div class="form-floating mt-3">
+            <textarea name="comentario" #comentario formControlName="comentario" class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
+            <label for="floatingTextarea2">Comentario<span class="text-muted"> (Optional)</span></label>
+          </div>
+          <!-- imagen -->
+
+          <div *ngIf="file" class="mt-3 text-center">
+            <p-image [src]="file" class="rounded" [alt]="image.name" width="250" [preview]="true"></p-image>
+          </div>
+          <div class="input-group mb-3 mt-3">
+            <label class="input-group-text" for="inputGroupFile01">Imagen</label>
+            <input #imagen formControlName="imagen" (change)="imageSelected($event)" name="imagen" type="file" class="form-control" id="inputGroupFile01" required />
+          </div>
+
+          <hr class="my-4" />
+          <div class="btn-group col-12" role="group" aria-label="Basic mixed styles example" style="position: relative">
+            <button type="button " class="w-100 m-lg-1 btn btn-outline-primary rounded" (click)="resetRegistro()">Reset</button>
+
+            <button [disabled]="loading " type="button " *ngIf="productoForm.valid; else disa" class="w-100 m-lg-1 btn btn-primary rounded" type="submit">
+              <ngx-spinner bdColor="rgb(11,94,215)" size="default" color="#fff" type="line-scale-pulse-out-rapid" [fullScreen]="false">
+                <p style="color: white"></p>
+              </ngx-spinner>
+              Guardar Producto
+            </button>
+
+        <ng-template #disa>
+          <button [disabled]="!productoForm.valid" type="button " class="w-100 m-lg-1 btn btn-primary rounded" type="submit">
+            Ingrese todos los campos
+          </button>
+        </ng-template>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+     <!-- <div class="btn-group col-12" role="group" aria-label="Basic mixed styles example" style="position: relative">
+            <button type="button " class="w-100 m-lg-1 btn btn-outline-primary rounded" (click)="resetRegistro()">
+              Reset
+            </button>
+            <button [disabled]="loading" type="button" class="w-100 m-lg-1 btn btn-primary rounded" type="submit">
+              <ngx-spinner bdColor="rgb(11,94,215)" size="default" color="#fff" type="line-scale-pulse-out-rapid" [fullScreen]="false">
+                <p style="color: white"></p>
+              </ngx-spinner>
+              Guardar Producto
+            </button>
+          </div> -->
+<!--
+<div class="btn-group col-12" role="group" aria-label="Basic mixed styles example" style="position: relative">
+  <button type="button " class="w-100 m-lg-1 btn btn-outline-primary rounded" (click)="resetRegistro()">Reset</button>
+  <button [disabled]="loading " type="button " *ngIf="productoForm.valid; else e"
+    class="w-100 m-lg-1 btn btn-primary rounded" type="submit">
+    <ngx-spinner bdColor="rgb(11,94,215)" size="default" color="#fff" type="line-scale-pulse-out-rapid"
+      [fullScreen]="false">
+      <p style="color: white"></p>
+    </ngx-spinner>
+    Guardar Producto
+  </button>
+  <ng-template #e><button [disabled]="!productoForm.valid" type="button " class="w-100 m-lg-1 btn btn-primary rounded"
+      type="submit">
+      Ingrese todos los campos
+    </button></ng-template>
+
+</div> -->
+
+<!-- <p-tableCheckbox (click)="onDelete(i+1)" [value]="i+1">
+                                                        </p-tableCheckbox> -->

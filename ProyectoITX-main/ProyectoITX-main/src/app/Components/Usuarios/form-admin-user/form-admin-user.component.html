@@ -1,0 +1,100 @@
+<html>
+    <header></header>
+    <body>
+        <p-panel header="Registro usuario">
+            <div class="p-grid p-fluid">
+                <div class="row">
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="persona.cedula" [pKeyFilter]="'int'" maxlength="10" minlength="10" (ngModelChange)='buscarPorCedula()' pInputText required> 
+                                <label for="float-input">Cédula</label>
+                            </span>
+                            <!-- <div class="row">
+                                <div class="col-8">
+                                    <span class="p-float-label">
+                                        <input id="float-input" type="text" [(ngModel)]="persona.cedula" [pKeyFilter]="'int'" maxlength="10" minlength="10" pInputText required> 
+                                        <label for="float-input">Cédula</label>
+                                    </span>
+                                </div>
+                                <div class="col">
+                                    <p-button type="button" styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-search" (click)="buscarPorCedula()" style="float: right;"></p-button>
+                                </div>
+                            </div>     -->
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="persona.nombres" [pKeyFilter]="blockSpecial" maxlength="30" minlength="3" pInputText> 
+                                <label for="float-input">Nombres</label>
+                            </span>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="persona.apellidos" [pKeyFilter]="blockSpecial" maxlength="30" minlength="3" pInputText> 
+                                <label for="float-input">Apellidos</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="persona.correo" [pKeyFilter]="valCorreo" maxlength="30" minlength="6" pInputText> 
+                                <label for="float-input">Correo</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="date" [(ngModel)]="fechaNacimiento" pInputText> 
+                                <label for="float-input">Fecha de nacimiento</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="listaEmpresas" [(ngModel)]="empresa" placeholder="Empresa" optionLabel="nombre" [filter]="true" [showClear]="true"></p-dropdown>   
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="listaRoles" [(ngModel)]="rol" placeholder="Rol" optionLabel="nombre" [filter]="true" [showClear]="true"></p-dropdown>   
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="generos" [(ngModel)]="persona.genero" placeholder="{{persona.genero}}" [showClear]="true"></p-dropdown>   
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="persona.direccion" [pKeyFilter]="blockSpecial" maxlength="40" minlength="10" pInputText> 
+                                <label for="float-input">Dirección</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <p-inputMask id="float-input" mask="09-9999999" [(ngModel)]="persona.telefono" placeholder=""></p-inputMask>
+                                <label for="float-input">Teléfono</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <p-inputMask mask=" 09-9999-9999" [(ngModel)]="persona.celular" placeholder=""></p-inputMask> 
+                                <label for="float-input">Celular</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="usuario.username" [pKeyFilter]="'alphanum'" maxlength="30" minlength="3" pInputText> 
+                                <label for="float-input">Username</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <p-password [toggleMask]="true" [(ngModel)]="usuario.password" [pKeyFilter]="'alphanum'" maxlength="15" minlength="6"></p-password> 
+                                <label for="float-input">Password</label>
+                            </span>    
+                        </div>
+
+                    </div>                   
+                    <br>
+                    <div class="p-col-12 p-md-4">
+                        <button pButton pRipple type="button" label="Registrar Usuario" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="registrarUsuario()"></button>  
+                    </div>
+                </div>
+            </div>
+        </p-panel>
+    </body>
+</html>

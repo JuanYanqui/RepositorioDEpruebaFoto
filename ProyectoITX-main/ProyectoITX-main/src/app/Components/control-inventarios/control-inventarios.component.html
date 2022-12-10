@@ -1,0 +1,312 @@
+<p-table #dt [rowHover]="true" [value]="listaCompras" dataKey="id" [rows]="10" [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" ngClass="container-fluid" styleClass=" p-datatable-sm" [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="['id','valor_total','estado','fecha_pedido']" [(selection)]="arraySelected" responsiveLayout="scroll">
+	<ng-template pTemplate="caption">
+		<div class="p-d-flex">
+			<span class="p-input-icon-left p-ml-auto">
+				<i class="pi pi-search"></i>
+				<input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Search keyword" />
+			</span>
+		</div>
+		<div class="p-d-flex" style="align-content: right;">
+			<span class="p-buttonset">
+				<br>
+				<button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;" label="PDF" icon="pi pi-file-pdf"></button>
+			</span>
+		</div>
+	</ng-template>
+	<ng-template pTemplate="header">
+		<tr>
+			<th></th>
+			<th style="text-align:center;"></th>
+			<th style="text-align:center" pSortableColumn="id">Id <p-sortIcon field="id"></p-sortIcon>
+			</th>
+			<th style="text-align:center" pSortableColumn="valor_total">
+				Valor Total<p-sortIcon field="valor_total"></p-sortIcon>
+			</th>
+			<th style="text-align:center" pSortableColumn="estado">
+				Estado <p-sortIcon field="estado"></p-sortIcon>
+			</th>
+			<th style="text-align:center" pSortableColumn="fecha_pedido">
+				Fecha <p-sortIcon field="fecha_pedido"></p-sortIcon>
+			</th>
+			<th style="text-align:center">Revisar items</th>
+		</tr>
+		<tr>
+			<th style="width: 3rem">
+				<p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+			</th>
+			<th></th>
+			<th>
+				<p-columnFilter type="text" field="id"></p-columnFilter>
+			</th>
+			<th>
+				<p-columnFilter type="text" field="valor_total"></p-columnFilter>
+			</th>
+			<th>
+				<p-columnFilter type="text" field="estado"></p-columnFilter>
+			</th>
+			<th>
+
+				<p-columnFilter type="text" field="fecha_pedido" placeholder="Ejm:2021-10-28"></p-columnFilter>
+			</th>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="body" let-compradetail let-expanded="expanded">
+		<tr>
+			<td>
+				<p-tableCheckbox [value]="compradetail"></p-tableCheckbox>
+			</td>
+			<td style="text-align:center">
+				<button type="button" pButton pRipple [pRowToggler]="compradetail" class="p-button-text p-button-rounded  p-button-plain" [icon]="expanded ? 'pi pi-chevron-down fs-4 ' : 'pi pi-chevron-right fs-4 '"></button>
+			</td>
+			<td style="text-align:center">{{ compradetail.id }}</td>
+			<td style="text-align:center">{{ compradetail.valor_total | currency: "USD" }}</td>
+			<td style="text-align:center">
+				<div *ngFor="let nombre of estados; let i as index;">
+					<ng-container *ngIf="compradetail.estado=='estados.nombre'">
+						<span>{{nombre.name}}</span>
+					</ng-container>
+				</div>
+				<div *ngFor="let estado of estados">
+					<ng-template [ngIf]="compradetail.estado.toLowerCase() === estado.name.toLowerCase()">
+						<span class="m-2 rounded " [style]="estado.style">
+							<small class="fw-bold fs-6 m-2">
+								{{estado.name.toUpperCase()}}
+							</small>
+						</span>
+					</ng-template>
+				</div>
+			</td>
+			<td style="text-align:center">
+				{{compradetail.fecha_pedido|date}}
+			</td>
+			<td style="text-align:center">
+				<i (click)="editCompraDetail(compradetail)" type="button" class="pi pi-list p-button-rounded p-button-success fs-2 p-text-secondary" pBadge severity="danger" value="{{compradetail.compras.length}}"></i>
+			</td>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="rowexpansion" let-compradetail>
+		<tr>
+			<td colspan="7">
+				<p-table styleClass="p-datatable-sm p-datatable-gridlines" [value]="compradetail.compras" dataKey="id">
+					<ng-template pTemplate="caption">
+						Productos
+					</ng-template>
+					<ng-template pTemplate="header">
+		<tr>
+			<th pSortableColumn="id">
+				Producto <p-sortIcon field="id"></p-sortIcon>
+			</th>
+			<th pSortableColumn="imagen">
+				Imagen <p-sortIcon field="imagen"></p-sortIcon>
+			</th>
+			<th pSortableColumn="cantidad">
+				Cantidad <p-sortIcon field="cantidad"></p-sortIcon>
+			</th>
+			<th pSortableColumn="unidad">
+				Unidad <p-sortIcon field="unidad"></p-sortIcon>
+			</th>
+			<th pSortableColumn="valor_total">
+				Valor total <p-sortIcon field="valor_total"></p-sortIcon>
+			</th>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="body" let-compras>
+		<tr>
+			<td>{{ compras.producto.nombre }}</td>
+			<td>
+				<img [src]="compras.producto.imagen" [alt]="compras.producto.nombre" width="120px" height="auto" class="p-shadow-4" />
+			</td>
+			<td>{{ compras.cantidad }}</td>
+			<td>{{ compras.unidad }}</td>
+			<td>{{ compras.valor_total | currency: "USD" }}</td>
+		</tr>
+	</ng-template>
+	<ng-template pTemplate="emptymessage">
+		<tr>
+			<td colspan="6">
+				There are no compras for this compradetail yet.
+			</td>
+		</tr>
+	</ng-template>
+</p-table>
+</td>
+</tr>
+</ng-template>
+<!-- <ng-template pTemplate="summary">
+	Footer
+</ng-template> -->
+</p-table>
+
+<div>
+	<p-dialog [(visible)]="productDialog" header="Detalle compra" [modal]="true" [breakpoints]="{'960px': '75vw'}" [draggable]="false" [resizable]="false">
+		<ng-template pTemplate="body" pTemplate="content">
+			<div *ngIf="this.estadoSeleccionado.toLowerCase()!=='aceptado' && this.estadoSeleccionado.toLowerCase()!=='cancelado'
+			&& this.estadoSeleccionado.toLowerCase()!=='rechazado' && this.estadoSeleccionado.toLowerCase()!=='devuelto'; else elseee">
+				<p-toolbar>
+					<ng-template #pipo pTemplate="right">
+						<div *ngIf="!exist_bodegas; else nohay">
+
+						</div>
+						<ng-template #nohay>
+							<div *ngIf="this.estadoSeleccionado.toLowerCase()!=='aceptado' && this.estadoSeleccionado.toLowerCase()!=='cancelado'" class="p-grid p-fluid">
+								<div class="p-col-12 ">
+									<div class="p-inputgroup">
+										<div class="me-2">
+											<button pButton pRipple label="Guardar" (click)="hideDialogAndAccept()" icon="pi pi-check" class="p-button-success "></button>
+										</div>
+										<div class="ms-2">
+											<button pButton pRipple label="Cancelar" icon="pi pi-times" class="p-button-danger" (click)="hideDialog()"></button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</ng-template>
+
+					</ng-template>
+					<ng-template clas pTemplate="left">
+
+
+						<div *ngIf="exist_bodegas; else nobod">
+
+							<h6 for="estado">Estado general de pedido</h6>
+							<p-dropdown styleClass="me-2  " [(ngModel)]="current_state" id="estado" optionValue="name" (onChange)="changeStatus($event, id_to_edit)" [options]="estados" placeholder="Estado general de pedido" optionDisabled="inactive" optionLabel="name">
+								<ng-template let-estados  pTemplate="item">
+										<span class="rounded " [style]="estados.style">
+											<small class="fw-bold m-2">
+												{{estados.name.toUpperCase()}}
+											</small>
+										</span>
+								</ng-template>
+							</p-dropdown>
+
+
+							<div ngClass="mt-3">
+								<p-dropdown (change)="selectBodega($event)" [(ngModel)]="selectedBodega"  [options]="bodegas" placeholder="Bodega a guardar" optionLabel="nombre">
+									<ng-template let-bodegas>
+										<div>
+											<span>
+												{{ bodegas.nombre }}
+											</span>
+										</div>
+									</ng-template>
+								</p-dropdown>
+							</div>
+						</div>
+						<ng-template #nobod>
+							<div>
+								<span class="m-2 rounded " style="color:#C63737; background-color: #FFCDD2;">
+									<small class="fw-bold fs-6 m-2">
+										No hay bodegas
+									</small>
+								</span>
+							</div>
+						</ng-template>
+					</ng-template>
+				</p-toolbar>
+			</div>
+			<ng-template #elseee>
+				<div>
+					<div *ngFor="let estado of estados">
+						<ng-template [ngIf]="this.estadoSeleccionado.toLowerCase() === estado.name.toLowerCase()">
+							<span class="m-2 rounded " [style]="estado.style">
+								<small class="fw-bold fs-6 m-2">
+									{{estado.name.toUpperCase()}}
+								</small>
+							</span>
+						</ng-template>
+					</div>
+				</div>
+			</ng-template>
+<!--!Editar fechas del producto --->
+			<div class="card mt-3">
+				<div class="card-header">
+					Lista Productos
+				</div>
+				<!-- {{ compraItems | json }} -->
+				<p-table styleClass="p-datatable-sm" [rowHover]="true" [rows]="10" [showCurrentPageReport]="true" [paginator]="true" currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [value]="compraItems" dataKey="id" editMode="row" responsiveLayout="scroll">
+					<ng-template let-producto pTemplate="header">
+						<tr>
+							<th style="text-align:center">Id</th>
+							<th style="text-align:center">Producto</th>
+							<th style="text-align:center">Categoria</th>
+							<th style="text-align:center">Stock</th>
+							<th style="text-align:center">Fecha elaboración</th>
+							<th style="text-align:center">Fecha expiración</th>
+							<!-- <th style="text-align:center">Bodega</th> -->
+							<!-- <th style="text-align:center">Estado</th> -->
+							<!-- <th style="text-align:center"></th> -->
+						</tr>
+					</ng-template>
+					<!--! info editar compra --->
+					<ng-template pTemplate="body" let-compra let-editing="editing" let-ri="rowIndex">
+						<!-- {{ compra | json }} -->
+						<tr [pEditableRow]="compra">
+							<td style="text-align:center">{{ compra.producto.id}}</td>
+							<td style="text-align:center">{{ compra.producto.nombre}}</td>
+							<td style="text-align:center">
+								<div *ngFor="let cat of compra.producto.categorias">
+									{{cat.nombre}}
+								</div>
+							</td>
+							<td style="text-align:center">{{ compra.producto.cantidad}}</td>
+							<td style="text-align:center">
+								<p-cellEditor>
+									<ng-template pTemplate="input">
+										<!-- <input pInputText type="text" [(ngModel)]="control.fecha_elaboracion" required> -->
+										<p-inputMask mask="9999-99-99" placeholder="9999-99-99" slotChar="yyyy-mm-dd"  [(ngModel)]="control.fecha_elaboracion"></p-inputMask>
+									</ng-template>
+									<ng-template pTemplate="output">
+										{{control.fecha_elaboracion}}
+									</ng-template>
+								</p-cellEditor>
+								<!-- <p-inputMask mask="99/99/9999" placeholder="99/99/9999" slotChar="mm/dd/yyyy"></p-inputMask> -->
+							</td>
+							<td style="text-align:center">
+								<p-cellEditor>
+									<ng-template pTemplate="input">
+										<!-- <input pInputText type="text" [(ngModel)]="control.fecha_elaboracion" required> -->
+										<p-inputMask mask="9999-99-99" placeholder="9999-99-99" slotChar="yyyy-mm-dd" [(ngModel)]="control.fecha_caducidad"></p-inputMask>
+									</ng-template>
+									<ng-template pTemplate="output">
+										{{control.fecha_caducidad}}
+									</ng-template>
+								</p-cellEditor>
+								<!-- <p-inputMask mask="99/99/9999" placeholder="99/99/9999" slotChar="mm/dd/yyyy"></p-inputMask> -->
+							</td>
+							<!--
+							<td style="text-align:center">
+								<p-dropdown ngClass="me-2" (onChange)="changeStatus($event, id_to_edit)" [options]="estados" placeholder="Estado de pedido" optionLabel="name">
+									<ng-template let-estados>
+										<div>
+											<span>
+												{{ estados.name }}
+											</span>
+										</div>
+									</ng-template>
+								</p-dropdown>
+							</td> -->
+							<td style="text-align:center">
+								<button *ngIf="!editing" pButton pRipple type="button" pInitEditableRow icon="pi pi-pencil" (click)="onRowEditInit(compra)" class="p-button-rounded p-button-text"></button>
+								<button *ngIf="editing" pButton pRipple type="button" pSaveEditableRow icon="pi pi-check" (click)="onRowEditSave(compra)" class="p-button-rounded p-button-text p-button-success p-mr-2"></button>
+								<button *ngIf="editing" pButton pRipple type="button" pCancelEditableRow icon="pi pi-times" (click)="onRowEditCancel(compra, ri)" class="p-button-rounded p-button-text p-button-danger"></button>
+							</td>
+						</tr>
+					</ng-template>
+				</p-table>
+			</div>
+		</ng-template>
+		<!-- <ng-template pTemplate="footer">
+			Pipo
+		</ng-template> -->
+	</p-dialog>
+</div>
+<!-- <p-dropdown (onChange)='changeStatus($event,compradetail.id)' [options]="estados" placeholder="Select a City"
+                                                    optionLabel="name">
+                                                    <ng-template let-estados>
+                                                        <div>
+                                                            <span>
+                                                                {{estados.name}}
+                                                            </span>
+                                                        </div>
+                                                    </ng-template>
+                                                </p-dropdown> -->

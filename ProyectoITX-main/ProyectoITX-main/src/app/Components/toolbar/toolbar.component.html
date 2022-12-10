@@ -1,0 +1,217 @@
+<header class="p-3 bg-dark text-white">
+    <div class="container">
+        <div class="
+        d-flex
+        flex-wrap
+        align-items-center
+        justify-content-center justify-content-lg-start
+      ">
+            <a href="/" class="
+          d-flex
+          align-items-center
+          mb-2 mb-lg-0
+          text-white text-decoration-none
+        ">
+                <i class="bi bi-house"></i>
+            </a>
+
+            <ul class="
+          nav
+          col-12 col-lg-auto
+          me-lg-auto
+          mb-2
+          justify-content-center
+          mb-md-0
+        "
+      >
+        <li><a href="#" class="nav-link px-2 text-secondary" routerLink="/home">Home</a></li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/catalogo"
+            routerLinkActive="active"
+            *ngIf = 'isPublic'>Catalogo</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/catalogo-productos"
+            routerLinkActive="active"
+            *ngIf = 'isClient'>Productos</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/client-pedidos"
+            routerLinkActive="active"
+            *ngIf = 'isClient'>Pedidos</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/cliente"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isVenta'>Clientes</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/proveedores"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isGerente'>Proveedores</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+             [routerLink]="'bodegas'"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isBodega'>Bodegas</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            [routerLink]="'producto'"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isBodega'>Productos</a
+          >
+
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/personal"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isGerente'>Personal</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            [routerLink]="'compras'"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isVenta'>Compra</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            [routerLink]="'control-inventario'"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isBodega'>Control inventarios</a
+          >
+
+        </li>
+        <!-- <li>
+          <a href="#" class="nav-link px-2 text-white" [routerLink]="'control-inventario'" routerLinkActive="active"
+            *ngIf='isClientAdmin && isVenta'>Control inventarios</a>
+        </li> -->
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/gestion-pedidos"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isVenta'>Pedidos</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/venta-client"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isVenta'>Venta</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/reportes"
+            routerLinkActive="active"
+            *ngIf = 'isClientAdmin && isVenta'>Reportes</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/empresas"
+            routerLinkActive="active"
+            *ngIf = 'isSuperAdmin'>Empresas</a
+          >
+        </li>
+        <li>
+          <a
+            href="#"
+            class="nav-link px-2 text-white"
+            routerLink="/usuarios"
+            routerLinkActive="active"
+            *ngIf = 'isSuperAdmin'>Usuarios</a
+          >
+        </li>
+      </ul>
+
+            <div class="text-center" [hidden]="isLogin">
+                <button type="button" class="btn btn-outline-light me-2" (click)="iniciarSesion()">
+                    Login
+                </button>
+                <button type="button" class="btn btn-warning" (click)="registrarse()">
+                    Sign-up
+                </button>
+            </div>
+            <div class="text-center" [hidden]="!isLogin">
+                <div class="row">
+                    <div class="col">
+                        <button type="button" class="btn btn-outline-light me-2" (click)="cerrarSesion()">
+                            Sign-out
+                        </button>
+                    </div>
+                    <div class="col">
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="true">
+                                {{ nombreUsuario }}
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="#">Perfil</a></li>
+                                <li><a class="dropdown-item" href="#">Another action</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="configuracionesbtn" *ngIf = 'isClientAdmin && isVenta'>
+              <button pButton type="button" (click)="showMaximizableDialog()" label="" icon="pi pi-cog" class="p-button-text"></button>
+              <p-dialog header="     " [(visible)]="displayMaximizable" [modal]="true" [style]="{width: '50%'}" [maximizable]="true"
+                  [draggable]="false" [resizable]="false">
+                   <app-configuraciones></app-configuraciones>
+                  <ng-template pTemplate="footer">
+                          <p-button icon="pi pi-check"  label="Ok" (click)="displayMaximizable=false" styleClass="p-button-text"></p-button>
+                      </ng-template>
+              </p-dialog>
+
+             </div>
+          </div>
+        </div>
+
+</header>

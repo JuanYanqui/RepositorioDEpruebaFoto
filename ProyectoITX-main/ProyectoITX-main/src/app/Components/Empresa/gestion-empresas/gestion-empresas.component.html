@@ -1,0 +1,303 @@
+<html>
+    <header></header>
+    <body>
+        <p-table #dt2 [value]="listaEmpresas" dataKey="id" [rowHover]="true" [rows]="10"
+            [showCurrentPageReport]="true" [rowsPerPageOptions]="[10,25,50]" [loading]="loading" [paginator]="true"
+            currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [filterDelay]="0"
+            [globalFilterFields]="['ruc','nombre','rolComercial','cedula','representante']">
+            <ng-template pTemplate="caption">
+                <div class="table-header">
+                    <span class="p-input-icon-right">
+                        <i class="pi pi-search"></i>
+                        <input pInputText type="text"
+                            (input)="dt2.filterGlobal($any($event.target).value, 'contains')"
+                            placeholder="Global search" />
+                    </span>
+                </div>
+            </ng-template>
+            <ng-template pTemplate="header">
+                <tr>
+                    <th pSortableColumn="ruc">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            RUC
+                            <p-sortIcon field="ruc"></p-sortIcon>
+                            <p-columnFilter type="text" field="ruc" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="nombre">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Nombre o razón social
+                            <p-sortIcon field="nombre"></p-sortIcon>
+                            <p-columnFilter type="text" field="nombre" display="menu"
+                                class="p-ml-auto"></p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="rolComercial">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Actividad comercial
+                            <p-sortIcon field="rolComercial"></p-sortIcon>
+                            <p-columnFilter type="text" field="rolComercial" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="telefono">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Telefono
+                            <p-sortIcon field="telefono"></p-sortIcon>
+                            <p-columnFilter type="text" field="telefono" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>                    
+                    <th pSortableColumn="paginaWeb">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Página web
+                            <p-sortIcon field="paginaWeb"></p-sortIcon>
+                            <p-columnFilter type="text" field="paginaWeb" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="correo">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Correo
+                            <p-sortIcon field="correo"></p-sortIcon>
+                            <p-columnFilter type="text" field="correo" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="estado">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Estado
+                            <p-sortIcon field="estado"></p-sortIcon>
+                            <p-columnFilter type="boolean" field="estado" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="cedula">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Cédula representante
+                            <p-sortIcon field="cedula"></p-sortIcon>
+                            <p-columnFilter type="text" field="cedula" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th pSortableColumn="representante">
+                        <div class="p-d-flex p-jc-between p-ai-center">
+                            Representante
+                            <p-sortIcon field="representante"></p-sortIcon>
+                            <p-columnFilter type="text" field="representante" display="menu" class="p-ml-auto">
+                            </p-columnFilter>
+                        </div>
+                    </th>
+                    <th></th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-empresa>
+                <tr class="p-selectable-row">
+
+                    <td>
+                        {{empresa.ruc}}
+                    </td>
+                    <td>
+                        {{empresa.nombre}}
+                    </td>
+                    <td>
+                        {{empresa.rolComercial}}
+                    </td>
+                    <td>
+                        {{empresa.telefono}}
+                    </td>
+                    <td>
+                        {{empresa.paginaWeb}}
+                    </td>
+                    <td>
+                        {{empresa.correo}}
+                    </td>
+                    <td>
+                        <p-toggleButton [(ngModel)]="empresa.estado" onIcon={{icnActivo}} offIcon={{icnInactivo}} style="margin-left: 50%;" (click)="darBajaEmpresa(empresa)"></p-toggleButton>
+                        <!-- <p-toggleButton [(ngModel)]="empresa.estado" onLabel="Activo" offLabel="Inactivo" onIcon="pi pi-check" offIcon="pi pi-times" [style]="{'width': '10em'}"></p-toggleButton> -->
+                    </td>
+                    <td>
+                        {{empresa.persona?.cedula}}
+                    </td>
+                    <td>
+                        {{empresa.persona?.nombres}} {{empresa.persona?.apellidos}}
+                    </td>
+                    <td style="text-align: center">
+                        <button pButton pRipple type="button" icon="pi pi-pencil" label="" class="p-button-warning"  (click)="editarEmpresa(empresa)"></button>
+                    </td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr>
+                    <td colspan="8">No se encontraron empresas</td>
+                </tr>
+            </ng-template>
+        </p-table>
+    </body>
+
+    <p-dialog header="Editar empresa" [(visible)]="displayEE" [modal]="true" [style]="{width: '75vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+        <ng-template pTemplate="body">
+            <h4 style="text-align: center;">Datos de la empresa</h4>
+            <div class="p-grid p-fluid">                
+                <div class="row">
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.ruc" [pKeyFilter]="'int'" maxlength="16" minlength="10" pInputText required> 
+                                <label for="float-input">RUC</label>
+                            </span>
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.mision" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Misión</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.vision" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Visión</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.nombre" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Nombre o razón social</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.acronimo" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Acrónimo</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.rolComercial" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Actividad comercial</label> 
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]="empresa.paginaWeb" [pKeyFilter]="'alphanum'" maxlength="100" minlength="0" pInputText> 
+                                <label for="float-input">Página web</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input (change)="imageSelected($event)" name="logo" type="file" class="form-control" id="float-input" required/>
+                                <label for="float-input">Logo</label>
+                            </span>
+                            <div *ngIf="file && file!='' && actualizaImagen; else linkImagen" class="mt-3 text-center">
+                                <img [src]="file" class="rounded" alt="..." style="max-width: 50%;"/>
+                            </div>
+                            <ng-template #linkImagen>
+                                <img src="{{empresa.logo}}" class="rounded" alt="..." style="max-width: 50%;"/>
+                            </ng-template>
+                        </div>
+                        
+                    </div>
+                    <div class="col">
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.pais" [pKeyFilter]="'alpha'" maxlength="100" minlength="3" pInputText required> 
+                                <label for="float-input">País</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="provincias" [(ngModel)]="provincia" placeholder="{{empresa.provincia}}" optionLabel="pro" [showClear]="true"></p-dropdown>   
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <p-dropdown [options]="ciudades" [(ngModel)]="ciudad" placeholder="{{empresa.ciudad}}" optionLabel="ciu" [showClear]="true"></p-dropdown>   
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.direccion" [pKeyFilter]="blockSpecial" maxlength="100" minlength="10" pInputText required> 
+                                <label for="float-input">Dirección</label>
+                            </span>
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.codigoPostal" [pKeyFilter]="'int'" maxlength="10" minlength="4" pInputText> 
+                                <label for="float-input">Código postal</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <p-inputMask id="float-input" mask="09-9999999" [(ngModel)]="empresa.telefono" placeholder=""></p-inputMask> 
+                                <label for="float-input">Teléfono</label>
+                            </span>    
+                        </div>    
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label"> 
+                                <p-inputMask mask=" 09-9999-9999" [(ngModel)]="empresa.celular" placeholder=""></p-inputMask>
+                                <label for="float-input">Celular</label>
+                            </span>    
+                        </div>
+                        <div class="p-col-3 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" class="form-control" [(ngModel)]="empresa.correo" [pKeyFilter]="valCorreo" maxlength="100" minlength="6" pInputText> 
+                                <label for="float-input">Correo</label>
+                            </span>    
+                        </div>
+                    </div>
+                    <div class="row">
+                        <h5 style="text-align: center;">Cuenta bancaria <button pButton type="button" class="p-button-rounded p-button-primary" icon="pi pi-plus" (click)="agregarCuentaBancaria()"></button></h5>
+                        <div class="col">
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" [(ngModel)]="banco" type="text" [pKeyFilter]="'alpha'" maxlength="20" minlength="3" pInputText> 
+                                    <label for="float-input">Banco / Cooperativa</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" [(ngModel)]="tipo" type="text" [pKeyFilter]="'alpha'" maxlength="20" minlength="3" pInputText> 
+                                    <label for="float-input">Tipo cuenta</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" [(ngModel)]="numero" type="text" [pKeyFilter]="'int'" maxlength="20" minlength="3" pInputText> 
+                                    <label for="float-input">Número de cuenta</label>
+                                </span>    
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-3 p-md-4">
+                                <table class="table">
+                                    <thead>
+                                      <tr class="table-dark">
+                                        <th scope="col">Nº</th>
+                                        <th scope="col" style="text-align: center;">Información de la cuenta</th>
+                                        <th scope="col">Quitar</th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                      <tr *ngFor="let cuenta of empresa.cuentasBancarias let i = index">
+                                        <th>{{ i+1 }}</th>
+                                        <td>{{ cuenta }}</td>
+                                        <td><button pButton type="button" class="p-button-rounded p-button-danger" icon="pi pi-times" (click)="quitarCuentaBancaria(i)"></button></td>
+                                      </tr>
+                                    </tbody>
+                                  </table>
+                            </div>
+                        </div>                        
+                    </div>
+                
+                </div>
+                <div class="p-col-12 p-md-4">
+                    <div class="row">
+                        <div class="col">
+                            <button pButton pRipple type="button" label="Actualizar" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-success" (click)="actualizarEmpresa()"></button>
+                        </div>
+                        <div class="col">
+                            <button pButton pRipple type="button" label="Cancelar" icon="pi pi-times" iconPos="right" class="p-button-rounded p-button-danger" (click)="limpiar()"></button>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+        </ng-template>
+    </p-dialog>
+</html>

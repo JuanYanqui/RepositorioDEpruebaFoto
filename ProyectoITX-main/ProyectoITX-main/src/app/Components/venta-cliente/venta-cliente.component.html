@@ -1,0 +1,397 @@
+<html>
+    <header></header>
+    <body>
+        <div class="card">
+            <div class="p-grid p-fluid">
+                <div class="row">
+                    <div class="p-col-12 p-md-4">
+                        <div class="row" style="margin-left: 30%; margin-right: 30%; min-width: 40%;">
+                            <div class="col">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" [(ngModel)]="persona.cedula" [pKeyFilter]="'int'" maxlength="13" minlength="10" pInputText required> 
+                                    <label for="float-input">Cédula</label>
+                                </span>
+                            </div> 
+                            <div class="col">
+                                <span class="p-float-label">
+                                    <p-button type="button" label='Buscar' styleClass="p-button p-button-rounded p-mr-2" icon="pi pi-search" (click)="buscarCedula()" style="min-width: 100%;"></p-button>
+                                </span>
+                            </div>                           
+                        </div>
+                        <div class="row">
+                            <div class="col">
+                                <ng-template #registro>
+                                    <p-button type="button" label='Registrar persona' styleClass="p-button" icon="pi pi-user-plus" class="p-button-success" (click)="abrirRegistro()" style="margin-left: 40%; margin-right: 40%; min-width: 20%;"></p-button>
+                                </ng-template>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+                <div class="row" *ngIf='bandPedido; else registro'>
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]='persona.nombres' class="form-control" pInputText disabled>
+                                <label for="float-input">Nombres</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]='persona.apellidos' class="form-control" pInputText disabled>
+                                <label for="float-input">Apellidos</label>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="p-col-12 p-md-4">
+                            <span class="p-float-label">
+                                <input id="float-input" type="text" [(ngModel)]='persona.correo' class="form-control" pInputText disabled>
+                                <label for="float-input">Correo electronico</label>
+                            </span>
+                        </div> 
+                    </div>               
+                </div>
+            </div>
+            <br>
+            <p-table #dt [value]="listaProductos" [rows]="10" [paginator]="true" [globalFilterFields]="['nombre']" responsiveLayout="scroll"
+                [(selection)]="productsSelected" [rowHover]="true" dataKey="id"
+                currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+                <ng-template pTemplate="caption">
+                    <div>
+                        <p-button type="button" label='Ver pedido' styleClass="p-button" icon="pi pi-eye" class="p-button-success" style="float: right;" (click)="verPedido()" [disabled]='productsSelected.length === 0 || !bandPedido'></p-button>
+                    </div>
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        <span class="p-input-icon-left">
+                            <i class="pi pi-search"></i>
+                            <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar..." />
+                        </span>
+                    </div>
+                </ng-template>
+                <ng-template pTemplate="header">
+                    <tr>
+                        <th style="width: 3rem">
+                            <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+                        </th>
+                        <th pSortableColumn="nombre">Nombre <p-sortIcon field="nombre"></p-sortIcon></th>
+                        <th>Imagen </th>
+                        <th pSortableColumn="">Precio venta <p-sortIcon field=""></p-sortIcon></th>
+                        <th pSortableColumn="">Categorias <p-sortIcon field=""></p-sortIcon></th>
+                        <th pSortableColumn="">Unidades disponibles <p-sortIcon field=""></p-sortIcon></th>
+                        
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="body" let-producto>
+                    <tr>
+                        <td>
+                            <p-tableCheckbox [value]="producto"></p-tableCheckbox>
+                        </td>
+                        <td>{{producto.nombre}}</td>
+                        <td><img [src]="producto.imagen" [alt]="producto.nombre" width="100" class="p-shadow-4" /></td>
+                        <td>{{producto.precio_venta | currency:'USD'}}</td>
+                        <td style="min-width:200px">
+                            <tr *ngFor='let tag of producto.categorias'>
+                                <td>{{tag.nombre}}</td>
+                            </tr>                       
+                        </td>
+                        <td>{{producto.cantidad}}</td>
+                    </tr>
+                </ng-template>
+                <ng-template pTemplate="summary">
+                    <div class="p-d-flex p-ai-center p-jc-between">
+                        In total there are {{listaProductos ? listaProductos.length : 0 }} products.
+                    </div>
+                </ng-template>
+            </p-table>
+        </div>
+
+        <!-- PANEL PARA VER EL PEDIDO QUE ESTA HACIENDO EL CLIENTE -->
+        <p-dialog header="Pedido" [(visible)]="displayVP" [modal]="true" [style]="{width: '75vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+            <ng-template pTemplate="body">
+                <div class="p-grid p-fluid">
+                    <p-table [value]="listaItems" responsiveLayout="scroll">
+                        <ng-template pTemplate="caption">
+                            <div class="p-d-flex p-ai-center p-jc-between">
+                                <!-- <span class="p-input-icon-left">
+                                    <i class="pi pi-search"></i>
+                                    <input pInputText type="text" (input)="selectdt.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar..." />
+                                </span> -->
+                            </div>
+                        </ng-template>
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Imagen </th>
+                                <th>Precio venta</th>
+                                <th>Tipo unidad</th>
+                                <th>Categorias</th>
+                                <th>Cantidad </th>
+                                <th>Subtotal</th>
+                                <th>Estado</th>
+                                
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-item let-i="rowIndex">
+                            <tr>
+                                <td>{{item.producto.nombre}}</td>
+                                <td><img [src]="item.producto.imagen" [alt]="item.producto.nombre" width="100" class="p-shadow-4" /></td>
+                                <td>
+                                    {{item.tipoPrecio}} {{item.precio | currency:'USD'}}
+                                    <p-dropdown [options]="item.producto?.precio_ventas" [(ngModel)]="precio" placeholder="Seleccione" optionLabel="valor" (onChange)='cambioPrecio(i)'></p-dropdown>
+                                </td>
+                                <td>
+                                    {{item.tipoUnidad}} {{item.valUnidad}} Unidades.
+                                    <p-dropdown [options]="item.producto?.unidades_medida" [(ngModel)]="unidad" placeholder="Seleccione" optionLabel="nombre" (onChange)='cambioUnidad(i, item.producto?.unidades_medida)'></p-dropdown>
+                                </td>
+                                <td  *ngFor='let tag of item.producto.categorias'>
+                                    {{tag.nombre}}
+                                </td>
+                                <td>
+                                    <p-inputNumber [(ngModel)]="item.cantidad" [showButtons]="true" buttonLayout="horizontal" spinnerMode="horizontal" inputId="horizontal" [min]="1" 
+                                    decrementButtonClass="p-button-secondary" incrementButtonClass="p-button-secondary" incrementButtonIcon="pi pi-plus" decrementButtonIcon="pi pi-minus" style="margin-left: -20%;" (ngModelChange)='calcularUnidadTotal(i, item.cantidad, item.valUnidad)'>
+                                    </p-inputNumber>
+                                </td>
+                                <td>{{item.precio * item.unidadTotal | currency:'USD'}}</td>
+                                <td>{{obtenerDisponibilidad(item.producto.cantidad, item.cantidad)}}</td>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="summary">
+                            <div class="p-d-flex p-ai-center p-jc-between">
+                                En total se han elegido {{listaItems ? listaItems.length : 0 }} productos con un valor TOTAL: {{calcularValorTotalItems() | currency:'USD'}}
+                            </div>
+                        </ng-template>
+                    </p-table>
+                    <br>
+                    <div class="p-col-12 p-md-4">
+                        <button pButton pRipple type="button" label="Realizar venta" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="realizarVenta()"></button>  
+                    </div>
+                </div> 
+            </ng-template>
+        </p-dialog>
+
+        <!-- PANEL PARA REALIZAR LA COMPRA QUE ESTA HACIENDO EL CLIENTE DEL PEDIDO -->
+        <p-dialog header="Venta" [(visible)]="displayRC" [modal]="true" [style]="{width: '75vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+            <ng-template pTemplate="body">
+                <div class="p-grid p-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" [(ngModel)]='persona.nombres' class="form-control" pInputText disabled>
+                                    <label for="float-input">Nombres</label>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" [(ngModel)]='persona.apellidos' class="form-control" pInputText disabled>
+                                    <label for="float-input">Apellidos</label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" [(ngModel)]='persona.cedula' class="form-control" pInputText disabled>
+                                    <label for="float-input">Cedula</label>
+                                </span>
+                            </div> 
+                        </div>
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" [(ngModel)]='persona.correo' class="form-control" pInputText disabled>
+                                    <label for="float-input">Correo electronico</label>
+                                </span>
+                            </div> 
+                        </div>
+                    </div>
+                    <br>
+                    <p-table [value]="listaItems" responsiveLayout="scroll">
+                    <ng-template pTemplate="caption">
+                        <div class="p-d-flex p-ai-center p-jc-between">
+                            <!-- <h5 class="p-m-0">Productos elegidos</h5>
+                            <span class="p-input-icon-left">
+                                <i class="pi pi-search"></i>
+                                <input pInputText type="text" (input)="vercompra.filterGlobal($any($event.target).value, 'contains')" placeholder="Buscar..." />
+                            </span> -->
+                        </div>
+                    </ng-template>
+                    <ng-template pTemplate="header">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Precio venta</th>
+                            <th>Categorias</th>
+                            <th>Tipo</th>
+                            <th>Cantidad</th>
+                            <th>Unidades</th>
+                            <th>Subtotal</th>
+                            
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="body" let-item>
+                        <tr>
+                            <td>{{item.producto.nombre}}</td>
+                            <td>{{item.precio | currency:'USD'}}</td>
+                            <td  *ngFor='let tag of item.producto.categorias'>
+                                {{tag.nombre}}
+                            </td>
+                            <td>{{item.tipoUnidad}}</td>
+                            <td>
+                                {{item.cantidad}}
+                            </td>
+                            <td>{{item.unidadTotal}}</td>
+                            <td>{{item.precio * item.unidadTotal  | currency:'USD'}}</td>
+                        </tr>
+                    </ng-template>
+                    <ng-template pTemplate="summary">
+                        <div class="p-d-flex p-ai-center p-jc-between" style="text-align: justify;">
+                            IVA: {{empresa.iva}} %
+                            <br>
+                            TOTAL IVA: {{venta.valorIva | currency:'USD'}}
+                            <br>
+                            TOTAL SIN IVA: {{venta.valorSinIva | currency:'USD'}}
+                            <br>
+                            TOTAL: {{venta.valorPagar | currency:'USD'}}
+                        </div>
+                    </ng-template>
+                    </p-table>
+                    <br>
+                    <div class="p-col-3 p-md-4">
+                        <label for="float-input">Método de pago</label>
+                        <p-dropdown id="float-input" [options]="pagos" [(ngModel)]="venta.metodoPago" placeholder="Seleccione el metodo de pago"></p-dropdown>   
+                    </div>
+                    <div *ngIf='venta.metodoPago === "Contado"'>
+                        <div class="row">
+                            <div class="col">
+                                <div class="p-col-12 p-md-4">
+                                    <label for="locale-us">Valor a pagar</label>
+                                    <p-inputNumber id="float-input" [(ngModel)]="venta.valorPagar" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                                </div>
+                                <div class="p-col-12 p-md-4">
+                                    <label for="locale-us">Vuelto</label>
+                                    <p-inputNumber id="float-input" [(ngModel)]="venta.vuelto" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="p-col-12 p-md-4">
+                                    <label for="locale-us">Valor a caja</label>
+                                    <p-inputNumber id="float-input" [(ngModel)]="venta.valorCaja" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" (ngModelChange)="calcularVuelto()"></p-inputNumber>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf='venta.metodoPago === "Cheque"'>
+                        <div class="row">
+                            <div class="col">
+                                <div class="p-col-12 p-md-4">
+                                    <label for="locale-us">Valor a pagar</label>
+                                    <p-inputNumber id="float-input" [(ngModel)]="venta.valorPagar" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="p-col-12 p-md-4">
+                                    <label for="float-input">Número cheque</label>
+                                    <input id="float-input" type="text" [(ngModel)]="venta.numeroCheque" [pKeyFilter]="'int'" maxlength="13" minlength="10" pInputText required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf='venta.metodoPago === "Tarjeta"'>
+                        <div class="row">
+                            <div class="col">
+                                <div class="p-col-12 p-md-4">
+                                    <label for="locale-us">Valor a pagar</label>
+                                    <p-inputNumber id="float-input" [(ngModel)]="venta.valorPagar" inputId="locale-us" mode="decimal" locale="en-US" [minFractionDigits]="2" [disabled]='true'></p-inputNumber>
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="p-col-12 p-md-4">
+                                    <label for="float-input">Número tarjeta</label>
+                                    <input id="float-input" type="text" [(ngModel)]="venta.numeroTarjeta" [pKeyFilter]="'int'" maxlength="13" minlength="10" pInputText required>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="p-col-12 p-md-4">
+                        <button pButton pRipple type="button" label="Vender" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="vender()"></button>  
+                    </div>
+                </div> 
+            </ng-template>
+        </p-dialog>
+
+        <!-- PANEL PARA REGISTRAR A UNA PERSONA -->
+        <p-dialog header="Registro persona" [(visible)]="displayRP" [modal]="true" [style]="{width: '75vw'}" [baseZIndex]="10000" [draggable]="false" [resizable]="false">
+            <ng-template pTemplate="body">
+                <div class="p-grid p-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.cedula" [pKeyFilter]="'int'" maxlength="13" minlength="10" pInputText required> 
+                                    <label for="float-input">Cédula</label>
+                                </span>
+                            </div>
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.nombres" [pKeyFilter]="blockSpecial" maxlength="30" minlength="3" pInputText> 
+                                    <label for="float-input">Nombres</label>
+                                </span>
+                            </div>
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.apellidos" [pKeyFilter]="blockSpecial" maxlength="30" minlength="3" pInputText> 
+                                    <label for="float-input">Apellidos</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.correo" [pKeyFilter]="valCorreo" maxlength="30" minlength="6" pInputText> 
+                                    <label for="float-input">Correo</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <p-dropdown [options]="generos" [(ngModel)]="persona.genero" placeholder="Género"></p-dropdown>   
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="text" class="form-control" [(ngModel)]="persona.direccion" [pKeyFilter]="blockSpecial" maxlength="40" minlength="10" pInputText> 
+                                    <label for="float-input">Dirección</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <p-inputMask id="float-input" mask="09-9999999" [(ngModel)]="persona.telefono" placeholder=""></p-inputMask>
+                                    <label for="float-input">Teléfono</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-3 p-md-4">
+                                <span class="p-float-label">
+                                    <p-inputMask mask=" 09-9999-9999" [(ngModel)]="persona.celular" placeholder=""></p-inputMask> 
+                                    <label for="float-input">Celular</label>
+                                </span>    
+                            </div>
+                            <div class="p-col-12 p-md-4">
+                                <span class="p-float-label">
+                                    <input id="float-input" type="date" [(ngModel)]="persona.fechaNacimiento" pInputText> 
+                                    <label for="float-input">Fecha de nacimiento</label>
+                                </span>    
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="p-col-12 p-md-4">
+                        <button pButton pRipple type="button" label="Registrar persona" icon="pi pi-check" iconPos="right" class="p-button-rounded p-button-primary" (click)="registrarPersona()"></button>  
+                    </div>                    
+                </div>
+            </ng-template>
+        </p-dialog>
+    </body>
+</html>

@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agregar Personal</title>
+</head>
+<body>
+  <div *ngIf="this.estadoBtns===1">
+    <button #asbtnVER (click)="verPersonal()"  id="verBTn" type="button " class="w-100 m-lg-1 btn-primary">Ver Personal</button>
+    <button #asbtnEDITAR (click)="editarPersonal()" id="editBTn" type="button " class="w-100 m-lg-1 btn btn-success">Editar Personal</button>
+    </div>
+    <div *ngIf="this.estadoPersonal===0">
+      <button #asbtnVER (click)="regresarbtn()" id="regreBTn" type="button " class="w-100 m-lg-1 btn-primary">Regresar</button>
+                <form #registrar="ngForm"  class="needs-validation" novalidate>
+                  <div class="row g-3">
+                    <div class="col-12">
+                      <label for="name" class="form-label">Cedula</label>
+                      <input #asCedulaCl name="cedula" [(ngModel)]="persona.cedula" type="text" class="form-control" id="cedula" [(ngModel)]="persona.cedula" required>
+                      <div *ngIf="this.cedula===1">
+                        <div class="alertaNombres">
+                              <p class="text-danger">*Complete el campo requerido del nombre</p>
+                        </div>
+                      </div>
+                      <div class="invalid-feedback">
+                        Ingrese la cedula del personal.
+                      </div>
+                    </div>
+                    <div class="col-md-4" style="width: 550px;">
+                      <label for="zip" class="form-label">Nombres</label>
+                      <input #asNombresCl name="nombres" [(ngModel)]="persona.nombres" type="text" class="form-control" id="nombres" required>
+                      <div *ngIf="this.nombres===1">
+                        <div class="alertaNombres">
+                              <p class="text-danger">*Complete el campo requerido del nombre</p>
+                        </div>
+                      </div>
+                      <div class="invalid-feedback">
+                        Ingrese el nombre del personal
+                      </div>
+                    </div>
+
+                    <div class="col-md-4" style="width: 550px;">
+                      <label for="zip" class="form-label">Apellidos</label>
+                      <input #asApellidoCl name="apellidos" [(ngModel)]="persona.apellidos" type="text" class="form-control" id="apellidos" required>
+                      <div class="invalid-feedback">
+                        Ingrese los apellidos del apellidos
+                      </div>
+                    </div>
+
+                    <!-- distribuidor -->
+                    <div class="col-md-4" >
+                      <label for="zip" class="form-label">Correo</label>
+                      <input #asCorreoCl name="correo" [(ngModel)]="persona.correo" type="text" class="form-control" id="correo" required>
+                      <div class="invalid-feedback">
+                        Ingrese el correo del correo
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="zip" class="form-label">Telefono</label>
+                      <input #asTelefonoCl name="telefono" [(ngModel)]="persona.telefono" type="text" class="form-control" id="telefono" required>
+                      <div class="invalid-feedback">
+                        Ingrese el telefono del telefono
+                      </div>
+                    </div>
+                    <div class="col-md-4">
+                      <label for="zip" class="form-label">Celular</label>
+                      <input #asCelularCl name="celular" [(ngModel)]="persona.celular" type="text" class="form-control" id="celular" required>
+                      <div class="invalid-feedback">
+                        Ingrese el celular del celular
+                      </div>
+                    </div>
+                  </div>
+                  <br>
+                  <!--Fecha genero-->
+                  <div class="card-group">
+                  <div class="col-md-4" >
+                    <label for="zip" class="form-label">Fecha Nacimiento</label>
+                    <input #asFechNaci name="fechaNacimiento" [valueAsDate]="persona.fechaNacimiento" [ngModel]="persona.fechaNacimiento | date:'yyyy-MM-dd'" type="date" class="form-control" id="fechaNacimiento" required>
+                    <div class="invalid-feedback">
+                      Ingrese la fecha de nacimiento del personal
+                    </div>
+                  </div>
+                  <div *ngIf="bloquearSelecCar===1">
+                  <div class="col-md-4"  >
+                    <label for="zip" class="form-label">Cargo</label>
+                    <p-multiSelect  #asCargo [options]="listaCargos" [(ngModel)]="selectedCargos" defaultLabel="Selecciona uno o mas cargos" optionLabel="nombre" display="chip"></p-multiSelect>
+                    <!-- <Select name="cargo" [(ngModel)]="personal.cargo" class="form-control" id="cargo" required>
+                      <Option value="s/n">Cargo personal</Option>
+                      <Option value="Bodega">Bodega</Option>
+                      <Option value="Ventas">Ventas</Option>
+                      <Option value="Entregas">Entregas</Option>
+                    </Select> -->
+                  </div>
+                </div>
+                  <div *ngIf="bloqueCargo===1">
+                  <div class="col-md-4" >
+                    <label for="zip" class="form-label">Cargo</label>
+                    <input #asCargo name="cargo" [(ngModel)]="textCargo" type="text" class="form-control" id="cargo" required>
+                    <div class="invalid-feedback">
+                      Ingrese el cargo del personal
+                    </div>
+                  </div>
+                </div>
+                  <div class="col-md-4" >
+                    <label for="zip" class="form-label">Salario</label>
+                    <input #asbtnSalario name="salario" [(ngModel)]="personal.salario" type="number" class="form-control" id="salario" required>
+                    <div class="invalid-feedback">
+                      Ingrese el salario del personal
+                    </div>
+                  </div>
+                </div>
+                <br>
+                  <!-- foto -->
+                  <div class="form-floating mt-3">
+                    <input name="foto" type="file" class="form-control" id="foto" (change)="selectedFile($event)"  required>
+                    <br>
+                    <label for="floatingTextarea2">Foto</label>
+                  </div>
+                  <div >
+                    <div class="alertaNombres" style="border: 2px;border-radius: 20px;">
+                      <img id="imgPersonal"  src="{{foto}}" class="rounded mx-auto d-block" width="200px" height="200px">
+                    </div>
+                  </div>
+                  <div class="col-md-4" style="width: 550px;">
+                    <label for="zip" class="form-label">Usuario</label>
+                    <input #asUsuarioCl name="usuario" [(ngModel)]="usuario.username" type="text" class="form-control" id="usuarios" required>
+                    <div class="invalid-feedback">
+                      Ingrese el nombre de usuario del personal
+                    </div>
+                  </div>
+
+                  <div class="col-md-4" style="width: 550px;">
+                    <label for="zip" class="form-label">Contraseña</label>
+                    <input #ascontraCl name="contraseña" [(ngModel)]="usuario.password" type="text" class="form-control" id="contraseña" required>
+                    <div class="invalid-feedback">
+                      Ingrese la contraseña del personal
+                    </div>
+                  </div>
+                  <hr class="my-4">
+                  <div class="btn-group col-12 " role="group" aria-label="Basic mixed styles example">
+                    <button #asbtnSave type="button " (click)="actualizarprsonal()" class="w-100 m-lg-1 btn btn-primary"  type="submit">Guardar Personal</button>
+                  </div>
+                </form>
+              </div>
+        <!-- panel 2  listar productos-->
+        <div class="tab-pane" id="listar">
+          <h5 class="card-title mb-3">Personal</h5>
+          <div class="tab-pane active" id="registrar">
+            <main>
+              <div class="row g-5">
+                <div class="col-12">
+                 </div>
+              </div>
+              <hr class="my-4">
+              <!-- cards productos -->
+            </main>
+          </div>
+        </div>
+</body>
+</html>
