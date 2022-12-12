@@ -7,15 +7,16 @@ import { ProductosService } from '../products/productos.service';
 import { BodegasService } from '../bodegas/bodegas.service';
 import { Bodega } from '../bodegas/bodega';
 import { PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
-import { SharedServices } from 'src/app/Services/shared.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
-import { PersonalCargoService } from 'src/app/Services/personal-cargo.service';
-import { Empresa } from 'src/app/Models/Empresa';
-import { PersonalCargo } from 'src/app/Models/personal-cargo';
+import { SharedServices } from 'src/app/modules/services/shared.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
+import { PersonalCargoService } from 'src/app/modules/services/personal-cargo.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { PersonalCargo } from 'src/app/modules/Models/personal-cargo';
 import { ControlInventariosService } from './control-inventarios.service';
 import { ControlInventarios } from './control-inventarios';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AlertsService } from '@service/alerts';
+import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { AlertsService } from 'src/app/modules/services/alerts/alerts.service';
+
 @Component({
 	selector: 'app-control-inventarios',
 	templateUrl: './control-inventarios.component.html',
@@ -23,18 +24,18 @@ import { AlertsService } from '@service/alerts';
 	providers: [ComprasService],
 })
 export class ControlInventariosComponent implements OnInit {
-	controlForm!: FormGroup;
+	controlForm!: UntypedFormGroup;
 
-	constructor (private personalCargoService: PersonalCargoService,
+	constructor(private personalCargoService: PersonalCargoService,
 		private compras_service: ComprasService,
 		private sharedServices: SharedServices,
 		private bodegasService: BodegasService,
 		private productServices: ProductosService, private alert: AlertsService,
 		private usuarioService: UsuarioService,
-		private controlServices: ControlInventariosService) {}
+		private controlServices: ControlInventariosService) { }
 
 	empresa = new Empresa();
-	current_listaCompra={} as CompraDetail;
+	current_listaCompra = {} as CompraDetail;
 
 	clonedProducts: { [s: string]: Compra; } = {};
 
@@ -45,7 +46,7 @@ export class ControlInventariosComponent implements OnInit {
 	control = {} as ControlInventarios;
 	bodega = {} as Bodega;
 
-	selectedBodega= {} as Bodega;
+	selectedBodega = {} as Bodega;
 
 	listaCompras: CompraDetail[] = [];
 	compraDetail: CompraDetail[] = [];
@@ -165,7 +166,7 @@ export class ControlInventariosComponent implements OnInit {
 		if (this.selectedBodega == null || this.control.fecha_caducidad == null || this.control.fecha_elaboracion == null) {
 			this.alert.showWarnig("Debe llenar todos los campos", "Control de inventarios")
 		} else {
-			this.control.detalleCompras = this.current_listaCompra ;
+			this.control.detalleCompras = this.current_listaCompra;
 			this.control.bodega = this.selectedBodega;
 			this.control.empresa = this.empresa;
 			this.control.fecha_caducidad = new Date(this.control.fecha_caducidad);
@@ -218,37 +219,37 @@ export class ControlInventariosComponent implements OnInit {
 
 	hideDialogAndAccept() {
 
-			console.log(this.current_state);
+		console.log(this.current_state);
 
-			if (this.current_state == 'Aceptado') {
-				if (this.selectedBodega== null || this.control.fecha_caducidad == null || this.control.fecha_elaboracion == null) {
-					this.alert.showWarnig("Debe llenar todos los campos", "Control de inventarios")
-				} else {
+		if (this.current_state == 'Aceptado') {
+			if (this.selectedBodega == null || this.control.fecha_caducidad == null || this.control.fecha_elaboracion == null) {
+				this.alert.showWarnig("Debe llenar todos los campos", "Control de inventarios")
+			} else {
 
-					this.updateControl();
-	// console.log(this.control);
+				this.updateControl();
+				// console.log(this.control);
 
-
-				}
 
 			}
+
+		}
 
 		if (this.id_to_edit != 0 && this.current_state != 'Aceptado') {
-				this.compras_service
-					.changeStatusById(this.id_to_edit, this.current_state)
-					.subscribe({
-						next: (l) => console.warn(l),
-						complete: () => {
-							this.alert.showSuccess("Estado de pedido actualizado", "Control de inventarios");
-							this.getListCompras();
-							this.estadoSeleccionado = this.current_state;
-						},
-						error: () => this.alert.showError("No se pudo actualizar el pedido", "Control de inventarios")
-					}); this.getListCompras();
-			}
+			this.compras_service
+				.changeStatusById(this.id_to_edit, this.current_state)
+				.subscribe({
+					next: (l) => console.warn(l),
+					complete: () => {
+						this.alert.showSuccess("Estado de pedido actualizado", "Control de inventarios");
+						this.getListCompras();
+						this.estadoSeleccionado = this.current_state;
+					},
+					error: () => this.alert.showError("No se pudo actualizar el pedido", "Control de inventarios")
+				}); this.getListCompras();
+		}
 
 
-			this.submitted = false;
+		this.submitted = false;
 
 
 

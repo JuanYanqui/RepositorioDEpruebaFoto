@@ -6,16 +6,16 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { AlertsService } from '@service/alerts';
+import { UntypedFormBuilder, UntypedFormGroup, NgForm, Validators } from '@angular/forms';
 
 import { Observable, of } from 'rxjs';
 import { finalize } from 'rxjs/operators';
-import { Empresa } from 'src/app/Models/Empresa';
-import { UnidadMedida } from 'src/app/Models/mocks/unidadMedida';
-import { Proveedor } from 'src/app/Models/proveedor';
-import { UsuarioService } from 'src/app/Services/usuario.service';
-import { MoocksServices } from '../../../Models/mocks/mock.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { UnidadMedida } from 'src/app/modules/models/mocks/unidadMedida';
+import { Proveedor } from 'src/app/modules/models/proveedor';
+import { AlertsService } from 'src/app/modules/services/alerts/alerts.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
+import { MoocksServices } from '../../../modules/models/mocks/mock.service';
 import { Producto } from '../../products/producto';
 import { ProductosService } from '../../products/productos.service';
 import { Compra } from '../compra';
@@ -34,14 +34,14 @@ export class AddCompraComponent implements OnInit, OnDestroy {
 
   validPattern = '^(?! )^[A-Za-z0-9 ]+$';
   validNumberPatern = '^[0-9]+([.|,][0-9]+)?$';
-  compraForm!: FormGroup;
+  compraForm!: UntypedFormGroup;
 
   unidadMedida$!: Observable<UnidadMedida[]>;
   listProducts: Producto[] = [];
   listProveedores: Proveedor[] = [];
   filteredProducts!: any[];
   listUnidadesMedida!: Observable<UnidadMedida[]>;
-  selectedProveedores: Proveedor[]=[];
+  selectedProveedores: Proveedor[] = [];
 
   listaCompra: Compra[] = [];
 
@@ -66,8 +66,8 @@ export class AddCompraComponent implements OnInit, OnDestroy {
     private alertService: AlertsService,
     private usuariosService: UsuarioService,
     private compraService: ComprasService,
-    private formBuilder: FormBuilder
-  ) {}
+    private formBuilder: UntypedFormBuilder
+  ) { }
 
   @Output() usernameEmitter = new EventEmitter<string>();
 
@@ -108,7 +108,7 @@ export class AddCompraComponent implements OnInit, OnDestroy {
       producto: [''],
       cantidad: [
         null,
-        [Validators.required, Validators.pattern(this.validNumberPatern),Validators.maxLength(4)],
+        [Validators.required, Validators.pattern(this.validNumberPatern), Validators.maxLength(4)],
       ],
       unidad: ['Unidad', Validators.required],
       proveedores: [null, Validators.required],
@@ -146,7 +146,7 @@ export class AddCompraComponent implements OnInit, OnDestroy {
           );
           this.loadFormGroup();
           this.listaCompra = [];
-            this.detalleCompra = {} as CompraDetail;
+          this.detalleCompra = {} as CompraDetail;
         },
         error: () => {
           this.alertService.showError('No se pudo realizar el pedido', 'Error');
@@ -227,8 +227,8 @@ export class AddCompraComponent implements OnInit, OnDestroy {
                 }
               } else {
                 this.valor_unidad_equivalencia = this.compraForm.value.cantidad * unidad[this.unidad_selected].valor_equivalencia *
-                this.compraForm.value.producto.precio_compra;
-                this.total_unidades =this.compraForm.value.cantidad * unidad[this.unidad_selected].valor_equivalencia;
+                  this.compraForm.value.producto.precio_compra;
+                this.total_unidades = this.compraForm.value.cantidad * unidad[this.unidad_selected].valor_equivalencia;
               }
               break;
             default:
@@ -334,7 +334,7 @@ export class AddCompraComponent implements OnInit, OnDestroy {
   obtenerProdctos() {
     this.productService
       .getProductsByEmpresa2(this.empresa.idEmpresa)
-      .pipe(finalize(() => {}))
+      .pipe(finalize(() => { }))
       .subscribe({
         next: (producto) => (this.listProducts = producto),
         error: (err) => {

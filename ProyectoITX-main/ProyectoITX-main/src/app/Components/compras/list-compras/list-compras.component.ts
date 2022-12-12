@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
-import { SharedServices } from 'src/app/Services/shared.service';
+import { SharedServices } from 'src/app/modules/services/shared.service';
 import { CompraDetail } from '../compradetail';
 import { ComprasService } from '../compras.service';
 

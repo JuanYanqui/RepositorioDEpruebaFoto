@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { element } from 'protractor';
 import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Empresa } from 'src/app/Models/Empresa';
-import { PersonalCargo } from 'src/app/Models/personal-cargo';
-import { PersonalCargoService } from 'src/app/Services/personal-cargo.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
-import { AlertsService } from '../../../Services/alerts/alerts.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { PersonalCargo } from 'src/app/modules/Models/personal-cargo';
+import { PersonalCargoService } from 'src/app/modules/services/personal-cargo.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
+import { AlertsService } from '../../../modules/services/alerts/alerts.service';
 import { Bodega } from '../bodega';
 import { BodegasService } from '../bodegas.service';
 
@@ -20,13 +20,13 @@ import { BodegasService } from '../bodegas.service';
 export class DetailBodegaComponent implements OnInit {
 
   constructor (
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private route: ActivatedRoute,
     private bodegaService: BodegasService, private usuarioService: UsuarioService,
     private alertService: AlertsService, private personalCargoService: PersonalCargoService,
   ) {}
 
-  bodegaForm!: FormGroup;
+  bodegaForm!: UntypedFormGroup;
   validPattern = '^(?! )^[A-Za-z0-9 ]+$';
   validNumberPatern = '^[0-9]+([.|,][0-9]+)?$';
   bodega = {} as Bodega;

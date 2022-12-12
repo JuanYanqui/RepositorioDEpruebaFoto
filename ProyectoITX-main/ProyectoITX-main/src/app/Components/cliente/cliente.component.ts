@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
-import { Persona } from 'src/app/Models/persona';
-import { Clientes } from '../../Models/clientes';
-import { PersonaService } from '../../Services/persona.service';
-import { ClientesService } from '../../Services/clientes.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
-import { Empresa } from 'src/app/Models/Empresa';
-import { RolesService } from 'src/app/Services/roles.service';
+import { Persona } from 'src/app/modules/models/persona';
+import { Clientes } from '../../modules/models/clientes';
+import { PersonaService } from '../../modules/services/persona.service';
+import { ClientesService } from '../../modules/services/clientes.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { RolesService } from 'src/app/modules/services/roles.service';
 import { ToastrService } from 'ngx-toastr';
-import { Usuario } from 'src/app/Models/Usuario';
-import { Roles } from 'src/app/Models/Roles';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { Roles } from 'src/app/modules/models/Roles';
 
 @Component({
   selector: 'app-cliente',
@@ -16,23 +16,23 @@ import { Roles } from 'src/app/Models/Roles';
   styleUrls: ['./cliente.component.css']
 })
 export class ClienteComponent implements OnInit {
-  clientes:Clientes=new Clientes();
-  persona:Persona=new Persona();
+  clientes: Clientes = new Clientes();
+  persona: Persona = new Persona();
   empresa: Empresa = new Empresa;
   usuario: Usuario = new Usuario;
   rol: Roles = new Roles;
-  cedula:any;
-  nombres:any;
-  apellidos:any;
-  correo:any;
-  telefono:any;
-  celular:any;
-  direccion:any;
-  constructor(private toastr: ToastrService, private rolService: RolesService, private personaService:PersonaService, private clienteService:ClientesService, private usuarioService: UsuarioService) { }
+  cedula: any;
+  nombres: any;
+  apellidos: any;
+  correo: any;
+  telefono: any;
+  celular: any;
+  direccion: any;
+  constructor(private toastr: ToastrService, private rolService: RolesService, private personaService: PersonaService, private clienteService: ClientesService, private usuarioService: UsuarioService) { }
   blockSpecial: RegExp = /^[^<>*!#@$%^_=+?`\|{}[\]~"'\.\,=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVQWXYZ/;:]+$/;
   blockCorreo: RegExp = /^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$/;
-  fechaActual:any;
-  observaciones:any;
+  fechaActual: any;
+  observaciones: any;
 
   flagpersona!: boolean;
 
@@ -41,7 +41,7 @@ export class ClienteComponent implements OnInit {
     this.obtenerRol();
   }
 
-  obtenerEmpresa(){
+  obtenerEmpresa() {
     let idUsuario = localStorage.getItem('idUsuario');
     this.usuarioService.getPorId(idUsuario).subscribe(
       data => {
@@ -52,7 +52,7 @@ export class ClienteComponent implements OnInit {
     )
   }
 
-  obtenerRol(){
+  obtenerRol() {
     this.rolService.getByName('CLIENTE').subscribe(
       data => {
         this.rol = data;
@@ -60,57 +60,57 @@ export class ClienteComponent implements OnInit {
     )
   }
 
-  guardarDatos(){
-    if(this.validarDatos()==0 && this.persona.cedula?.length === 10){
+  guardarDatos() {
+    if (this.validarDatos() == 0 && this.persona.cedula?.length === 10) {
       this.fechaActual = new Date()
       this.clientes.fechaRegistro = this.fechaActual;
-      this.clientes.estado=true;
+      this.clientes.estado = true;
 
       this.usuario.empresa = this.empresa;
       this.usuario.estado = true;
       this.usuario.rol = this.rol;
 
-      if (this.flagpersona){
+      if (this.flagpersona) {
         //Cuando no se encuentra a la persona por la cedulase la registra
-        this.personaService.save(this.persona).subscribe(data=>{
-          this.persona=data;
+        this.personaService.save(this.persona).subscribe(data => {
+          this.persona = data;
           console.log("Persona registrada");
           this.registraUsuarioCliente(this.persona);
-          
+
         });
-      }else{
+      } else {
         //Cuando encuentra a la persona solo obtiene sus datos;
         this.registraUsuarioCliente(this.persona);
       }
-    }else{
-      this.toastr.warning('Verifique los campos del cliente','Advertencia!')
+    } else {
+      this.toastr.warning('Verifique los campos del cliente', 'Advertencia!')
     }
   }
 
-  registraUsuarioCliente(persona: Persona){
+  registraUsuarioCliente(persona: Persona) {
     this.usuario.persona = persona;
-          
+
     this.usuarioService.postUsuario(this.usuario).subscribe(
       result => {
         this.usuario.idUsuario = result.idUsuario;
 
         this.clientes.usuario = this.usuario;
 
-        this.clienteService.save(this.clientes).subscribe(data=>{
+        this.clienteService.save(this.clientes).subscribe(data => {
           this.borrarFormulario();
-          this.toastr.success('Cliente registrado correctamente','Registro exitoso!');
-        });  
+          this.toastr.success('Cliente registrado correctamente', 'Registro exitoso!');
+        });
       }
     );
   }
 
-  buscarPorCedula(){
+  buscarPorCedula() {
 
-    if (this.persona.cedula != null && this.persona.cedula != ''){
+    if (this.persona.cedula != null && this.persona.cedula != '') {
       this.personaService.getPorCedula(this.persona.cedula).subscribe(
         data => {
           console.log(data);
-          if (data != null){
+          if (data != null) {
 
             this.flagpersona = false;
 
@@ -124,38 +124,38 @@ export class ClienteComponent implements OnInit {
             this.persona.nombres = data.nombres;
             this.persona.telefono = data.telefono;
             this.persona.fechaNacimiento = data.fechaNacimiento;
-          }else{
+          } else {
             this.flagpersona = true;
 
-            this.toastr.info('La cedula ingresada no esta registrada en el sistema','Cedula no encontrada')      
+            this.toastr.info('La cedula ingresada no esta registrada en el sistema', 'Cedula no encontrada')
           }
         }
       )
-    }else{
-      this.toastr.warning('Cedula incorrecta','Advertencia!')
+    } else {
+      this.toastr.warning('Cedula incorrecta', 'Advertencia!')
     }
-      
+
   }
 
-  borrarFormulario(){
+  borrarFormulario() {
     this.flagpersona = false;
     this.persona = new Persona;
     this.usuario = new Usuario;
     this.clientes = new Clientes;
   }
-  validarDatos(){
-    let datos=0
-    if(this.persona.cedula==null || this.persona.cedula=="" || this.persona.cedula.length<=9){
-    this.cedula = 1;
-    datos=datos+1;
-    }else{
-      this.cedula=0;
+  validarDatos() {
+    let datos = 0
+    if (this.persona.cedula == null || this.persona.cedula == "" || this.persona.cedula.length <= 9) {
+      this.cedula = 1;
+      datos = datos + 1;
+    } else {
+      this.cedula = 0;
     }
-    if(this.persona.nombres==null || this.persona.cedula=="" || this.persona.nombres.length<=2){
+    if (this.persona.nombres == null || this.persona.cedula == "" || this.persona.nombres.length <= 2) {
       this.nombres = 1;
-      datos=datos+1;
-    }else{
-      this.nombres=0;
+      datos = datos + 1;
+    } else {
+      this.nombres = 0;
     }
     return datos;
   }

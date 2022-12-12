@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Persona } from 'src/app/Models/persona';
-import { Roles } from 'src/app/Models/Roles';
-import { Usuario } from 'src/app/Models/Usuario';
-import { PersonaService } from 'src/app/Services/persona.service';
-import { RolesService } from 'src/app/Services/roles.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Persona } from 'src/app/modules/models/persona';
+import { Roles } from 'src/app/modules/models/Roles';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { PersonaService } from 'src/app/modules/services/persona.service';
+import { RolesService } from 'src/app/modules/services/roles.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 
 @Component({
   selector: 'app-form-public-user',

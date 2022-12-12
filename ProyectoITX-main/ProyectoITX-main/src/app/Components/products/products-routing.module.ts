@@ -13,7 +13,7 @@ const routes: Routes = [
       {
         path: '',
         redirectTo: 'listar',
-        pathMatch: 'producto',
+        //pathMatch: 'full',
       },
 
       {

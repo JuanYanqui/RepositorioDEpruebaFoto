@@ -1,5 +1,5 @@
-import { PersonalCargo } from 'src/app/Models/personal-cargo';
-import { Empresa } from '../../Models/Empresa';
+import { PersonalCargo } from 'src/app/modules/Models/personal-cargo';
+import { Empresa } from '../../modules/models/Empresa';
 export interface Bodega {
   id: number;
   nombre: string;

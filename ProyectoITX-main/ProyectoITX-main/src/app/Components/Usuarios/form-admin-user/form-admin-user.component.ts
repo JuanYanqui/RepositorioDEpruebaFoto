@@ -1,14 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Empresa } from 'src/app/Models/Empresa';
-import { Persona } from 'src/app/Models/persona';
-import { Roles } from 'src/app/Models/Roles';
-import { Usuario } from 'src/app/Models/Usuario';
-import { EmpresaService } from 'src/app/Services/empresa.service';
-import { PersonaService } from 'src/app/Services/persona.service';
-import { RolesService } from 'src/app/Services/roles.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { Persona } from 'src/app/modules/models/persona';
+import { Roles } from 'src/app/modules/models/Roles';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { EmpresaService } from 'src/app/modules/services/empresa.service';
+import { PersonaService } from 'src/app/modules/services/persona.service';
+import { RolesService } from 'src/app/modules/services/roles.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 
 @Component({
   selector: 'app-form-admin-user',
