@@ -1,6 +1,4 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
-
 import { CatalogoComponent } from './Components/catalogo/catalogo.component';
 import { ClienteComponent } from './Components/cliente/cliente.component';
 import { EditarClientesComponent } from './Components/cliente/editar-clientes/editar-clientes.component';
@@ -14,7 +12,7 @@ import { ListaProveedoresComponent } from './Components/proveedores/lista-provee
 import { ProveedoresComponent } from './Components/proveedores/proveedores.component';
 import { FormPublicUserComponent } from './Components/Usuarios/form-public-user/form-public-user.component';
 import { LoginUsuariosComponent } from './Components/Usuarios/login-usuarios/login-usuarios.component';
-import { VigilanteClientAdminGuard } from './Services/guard/vigilante-client-admin.guard';
+import { VigilanteClientAdminGuard } from './modules/services/guard/vigilante-client-admin.guard';
 import { CatalogoProductosComponent } from './Components/catalogo-productos/catalogo-productos.component';
 import { ConfiguracionesComponent } from './Components/configuraciones/configuraciones.component';
 import { PedidoComponent } from './Components/pedido/pedido.component';
@@ -22,11 +20,11 @@ import { GestionPedidosComponent } from './Components/gestion-pedidos/gestion-pe
 import { ClientPedidosComponent } from './Components/client-pedidos/client-pedidos.component';
 import { ReportesComponent } from './Components/reportes/reportes.component';
 import { VentaClienteComponent } from './Components/venta-cliente/venta-cliente.component';
-
+import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: 'add-public-prolife', component: FormPublicUserComponent },
-  { path: 'log-in', component: LoginUsuariosComponent,data: { preload: true }},
+  { path: 'log-in', component: LoginUsuariosComponent, data: { preload: true } },
 
   { path: 'cliente', component: ClienteComponent },
   { path: 'lista-clientes', component: ListaClientesComponent },
@@ -52,9 +50,11 @@ const routes: Routes = [
     //canActivate: [VigilanteClientAdminGuard],
     component: ReportesComponent,
   },
-  { path: 'configuraciones',
-  canActivate: [VigilanteClientAdminGuard],
-  component:ConfiguracionesComponent},
+  {
+    path: 'configuraciones',
+    canActivate: [VigilanteClientAdminGuard],
+    component: ConfiguracionesComponent
+  },
   { path: 'catalogo', component: CatalogoComponent },
   { path: 'personal', component: PersonalComponent },
   { path: 'editar-proveedor', component: EditarProveedorComponent },
@@ -116,11 +116,11 @@ const routes: Routes = [
     data: { preload: false },
   },
   { path: 'home', component: HomeComponent },
-  { path: '', pathMatch: 'full', redirectTo: 'home'},
+  { path: '', pathMatch: 'full', redirectTo: 'home' },
   { path: '**', redirectTo: '', pathMatch: 'full' },
 ];
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }

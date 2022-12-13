@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Clientes } from 'src/app/Models/clientes';
-import { Empresa } from 'src/app/Models/Empresa';
-import { ItemPedido } from 'src/app/Models/item-pedido';
-import { Pedido } from 'src/app/Models/pedido';
-import { Usuario } from 'src/app/Models/Usuario';
-import { ClientesService } from 'src/app/Services/clientes.service';
-import { ItemPedidoService } from 'src/app/Services/item-pedido.service';
-import { PedidoService } from 'src/app/Services/pedido.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Clientes } from 'src/app/modules/models/clientes';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { ItemPedido } from 'src/app/modules/models/item-pedido';
+import { Pedido } from 'src/app/modules/models/pedido';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { ClientesService } from 'src/app/modules/services/clientes.service';
+import { ItemPedidoService } from 'src/app/modules/services/item-pedido.service';
+import { PedidoService } from 'src/app/modules/services/pedido.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 import { Producto } from '../products/producto';
 import { ProductosService } from '../products/productos.service';
 
@@ -39,7 +39,7 @@ export class PedidoComponent implements OnInit {
     this.obtenerPedido();
   }
 
-  obtenerCliente(){
+  obtenerCliente() {
     let usuario: Usuario = new Usuario;
     let empresa: Empresa = new Empresa;
 
@@ -59,44 +59,44 @@ export class PedidoComponent implements OnInit {
     )
   }
 
-  obtenerPedido(){
+  obtenerPedido() {
     let items: string[] = [];
     let idProductos: any = '';
 
     idProductos = sessionStorage.getItem('productosPedido');
 
-    if(idProductos != '' && idProductos != null){
+    if (idProductos != '' && idProductos != null) {
       items = idProductos.split(',');
-    }else{
-      this.toastr.warning('Aún no se agrego productos al pedido','Advertencia!');
+    } else {
+      this.toastr.warning('Aún no se agrego productos al pedido', 'Advertencia!');
     }
 
     items.forEach(id => {
       let itemPedido: ItemPedido = new ItemPedido;
       this.productoService.getProductById(id).subscribe(
-        data=>{
+        data => {
           let producto: Producto = {} as Producto;
           producto = data;
           itemPedido.producto = producto
           itemPedido.precio = producto.precio_venta;
-          console.log('valor pedido '+itemPedido.precio);
-      });
+          console.log('valor pedido ' + itemPedido.precio);
+        });
       itemPedido.cantidad = 0;
       itemPedido.valUnidad = 1;
       this.listaItems.push(itemPedido);
     });
 
-    console.log('azxa '+this.listaItems);
+    console.log('azxa ' + this.listaItems);
   }
 
-  realizarPedido(){
+  realizarPedido() {
     this.listaItems.forEach(item => {
-      if (item.unidadTotal! > item.producto?.cantidad!){
+      if (item.unidadTotal! > item.producto?.cantidad!) {
         this.bandDisponibilidad = false;
       }
     });
 
-    if (this.bandDisponibilidad){
+    if (this.bandDisponibilidad) {
       this.pedido.cliente = this.cliente;
       this.pedido.revicion = false;
       this.pedido.aceptacion = false;
@@ -111,7 +111,7 @@ export class PedidoComponent implements OnInit {
             let precio: any = item.precio;
             let unidades: any = item.unidadTotal;
             this.listaItems[i].precio = precio;
-            this.listaItems[i].subtotal =  unidades * precio;
+            this.listaItems[i].subtotal = unidades * precio;
             this.listaItems[i].pedido = this.pedido;
             console.log(this.listaItems[i]);
             this.itemPedidoService.post(this.listaItems[i]).subscribe(
@@ -121,31 +121,31 @@ export class PedidoComponent implements OnInit {
             )
           }
 
-          this.toastr.success('Pedido realizado correctamente','Exitoso!');
+          this.toastr.success('Pedido realizado correctamente', 'Exitoso!');
           sessionStorage.removeItem('productosPedido');
           this.listaItems = [];
 
         }
       )
-    }else{
+    } else {
       this.toastr.warning('Cantidad del producto no disponible');
     }
   }
 
-  cambioUnidad(i: number, unidades: Array<any>){
-    if (this.unidad != undefined){
+  cambioUnidad(i: number, unidades: Array<any>) {
+    if (this.unidad != undefined) {
       this.listaItems[i].tipoUnidad = this.unidad.nombre;
       this.listaItems[i].valUnidad = 1;
 
       let bandUnidad: boolean = true;
       let index: number = 0;
 
-      do{
-        if (unidades[index].nombre === this.unidad.nombre){
+      do {
+        if (unidades[index].nombre === this.unidad.nombre) {
           bandUnidad = false;
         }
         index++;
-      }while(bandUnidad)
+      } while (bandUnidad)
 
       for (let j = 0; j < index; j++) {
         const element = unidades[j];
@@ -154,38 +154,38 @@ export class PedidoComponent implements OnInit {
         console.log(element.nombre + ' ' + unidadTotal);
       }
 
-      console.log('TOTAL '+this.listaItems[i].valUnidad);
-      
+      console.log('TOTAL ' + this.listaItems[i].valUnidad);
+
     }
   }
 
-  calcularUnidadTotal(i: number, cantidad: number, valUnidad: number){
+  calcularUnidadTotal(i: number, cantidad: number, valUnidad: number) {
     this.listaItems[i].unidadTotal = cantidad * valUnidad;
     console.log(this.listaItems[i].unidadTotal);
   }
 
-  calcularValorTotalItems(): number{
+  calcularValorTotalItems(): number {
     let total: any = 0;
     this.listaItems.forEach(item => {
       let precio: any = item.precio;
       let cantidad: any = item.cantidad;
       let unidades: any = item.valUnidad;
-      total = total + ( precio * cantidad * unidades);
+      total = total + (precio * cantidad * unidades);
     });
     return total;
   }
 
-  verificarDisponibilidad(cantidadProducto: number, cantidadItem: number){
-    console.log('producto: '+cantidadProducto+' item: '+cantidadItem);
-    if (cantidadItem != undefined && cantidadItem <= cantidadProducto){
+  verificarDisponibilidad(cantidadProducto: number, cantidadItem: number) {
+    console.log('producto: ' + cantidadProducto + ' item: ' + cantidadItem);
+    if (cantidadItem != undefined && cantidadItem <= cantidadProducto) {
       this.bandDisponibilidad = true;
-    }else{
+    } else {
       this.bandDisponibilidad = false;
       this.toastr.warning('Cantidad elegida no disponible!');
     }
   }
 
-  volverCatalogo(){
+  volverCatalogo() {
     this.router.navigate(['/catalogo-productos']);
   }
 }

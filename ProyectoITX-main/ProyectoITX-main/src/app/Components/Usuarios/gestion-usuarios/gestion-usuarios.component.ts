@@ -1,10 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Persona } from 'src/app/Models/persona';
-import { Usuario } from 'src/app/Models/Usuario';
-import { PersonaService } from 'src/app/Services/persona.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Persona } from 'src/app/modules/models/persona';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { PersonaService } from 'src/app/modules/services/persona.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 
 @Component({
   selector: 'app-gestion-usuarios',
@@ -29,7 +29,7 @@ export class GestionUsuariosComponent implements OnInit {
 
   icnActivo: String = "pi pi-check";
   icnInactivo: String = "pi pi-times";
- 
+
   generos: string[] = [
     'Masculino', 'Femenino', 'Otro'
   ];
@@ -40,7 +40,7 @@ export class GestionUsuariosComponent implements OnInit {
     this.obtenerUsuariosPrivilegios();
   }
 
-  obtenerUsuariosPrivilegios(){
+  obtenerUsuariosPrivilegios() {
     this.usuarioService.getUsuarios().subscribe(
       data => {
         this.listaUsuarios = data.map(
@@ -62,7 +62,7 @@ export class GestionUsuariosComponent implements OnInit {
     );
   }
 
-  editarUsuario(usuario: Usuario){
+  editarUsuario(usuario: Usuario) {
     this.displayEU = true;
 
     this.persona.apellidos = usuario.persona?.apellidos;
@@ -75,7 +75,7 @@ export class GestionUsuariosComponent implements OnInit {
     this.persona.idPersona = usuario.persona?.idPersona;
     this.persona.telefono = usuario.persona?.telefono;
     this.persona.cedula = usuario.persona?.cedula;
-    
+
     this.usuario.empresa = usuario.empresa;
     this.usuario.rol = usuario.rol;
     this.usuario.estado = usuario.estado;
@@ -85,7 +85,7 @@ export class GestionUsuariosComponent implements OnInit {
 
   }
 
-  actualizarUsuario(){
+  actualizarUsuario() {
     this.personaService.updatePersona(this.persona, this.persona.idPersona).subscribe(
       data => {
         this.persona.idPersona = data.idPersona;
@@ -95,7 +95,7 @@ export class GestionUsuariosComponent implements OnInit {
           result => {
             console.log(result);
             this.limpiar();
-            this.toastr.success('Usuario actualizado correctamente','Exitoso!');
+            this.toastr.success('Usuario actualizado correctamente', 'Exitoso!');
 
           }
         )
@@ -103,13 +103,13 @@ export class GestionUsuariosComponent implements OnInit {
     )
   }
 
-  darBajaUsuario(usuario: Usuario){
+  darBajaUsuario(usuario: Usuario) {
     let title = '';
 
-    if (!usuario.estado){
+    if (!usuario.estado) {
       usuario.estado = false;
       title = 'Deshabilitado!';
-    }else {
+    } else {
       usuario.estado = true;
       title = 'Habilitado!';
     }
@@ -117,13 +117,13 @@ export class GestionUsuariosComponent implements OnInit {
     this.usuarioService.updateUsuario(usuario, usuario.idUsuario).subscribe(
       data => {
         console.log(data);
-        this.toastr.warning('Usuario '+title,'Advertencia!')
+        this.toastr.warning('Usuario ' + title, 'Advertencia!')
         this.limpiar();
       }
     )
   }
 
-  limpiar(){
+  limpiar() {
     this.displayEU = false;
     this.persona = new Persona;
     this.usuario = new Usuario;

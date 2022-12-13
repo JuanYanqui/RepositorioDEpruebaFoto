@@ -1,11 +1,11 @@
 import { Component, OnInit, Input, ViewChild, ElementRef, Renderer2 } from '@angular/core';
-import { Clientes } from 'src/app/Models/clientes';
-import { Persona } from 'src/app/Models/persona';
-import { Usuario } from 'src/app/Models/Usuario';
-import { ClientesService } from '../../../Services/clientes.service';
-import { Empresa } from '../../../Models/Empresa';
+import { Clientes } from 'src/app/modules/models/clientes';
+import { Persona } from 'src/app/modules/models/persona';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { ClientesService } from '../../../modules/services/clientes.service';
+import { Empresa } from '../../../modules/models/Empresa';
 import { style } from '@angular/animations';
-import { PersonaService } from 'src/app/Services/persona.service';
+import { PersonaService } from 'src/app/modules/services/persona.service';
 
 @Component({
   selector: 'app-editar-clientes',
@@ -13,7 +13,7 @@ import { PersonaService } from 'src/app/Services/persona.service';
   styleUrls: ['./editar-clientes.component.css']
 })
 export class EditarClientesComponent implements OnInit {
-  @Input()datainicial:any;
+  @Input() datainicial: any;
   @ViewChild('asCedulaCl')
   cedulaCli!: ElementRef;
   @ViewChild('asNombresCl')
@@ -33,45 +33,45 @@ export class EditarClientesComponent implements OnInit {
   @ViewChild('asbtnGuardar')
   btnguardarCli!: ElementRef;
   @ViewChild('asbtnVER')
-  btnVerProveedor!:ElementRef;
+  btnVerProveedor!: ElementRef;
   @ViewChild('asbtnEDITAR')
-  btnEditProveedor!:ElementRef;
+  btnEditProveedor!: ElementRef;
   @ViewChild('asUsuarioCl')
-  txtusuariocl!:ElementRef;
+  txtusuariocl!: ElementRef;
   @ViewChild('ascontraCl')
-  txtcotracl!:ElementRef;
-  nombres:any
-  ocultas:any;
-  situeco:any;
-  estadoProveedor:any;
-  estadoBtns:any=1;
-  cedula:any;
-  datainicialPersonal:any;
-  clientes: Clientes=new Clientes();
-  personas: Persona=new Persona();
-  usuarios:Usuario=new Usuario();
-  empresa:Empresa=new Empresa();
-  constructor(private render2:Renderer2,private clienteService:ClientesService,private personaService:PersonaService) { }
+  txtcotracl!: ElementRef;
+  nombres: any
+  ocultas: any;
+  situeco: any;
+  estadoProveedor: any;
+  estadoBtns: any = 1;
+  cedula: any;
+  datainicialPersonal: any;
+  clientes: Clientes = new Clientes();
+  personas: Persona = new Persona();
+  usuarios: Usuario = new Usuario();
+  empresa: Empresa = new Empresa();
+  constructor(private render2: Renderer2, private clienteService: ClientesService, private personaService: PersonaService) { }
   ngOnInit(): void {
   }
-  actualizarCliente(){
-    this.personaService.updatePersona(this.personas,this.personas.idPersona).subscribe(data=>{
-      this.clienteService.updateclientes(this.clientes,this.datainicial[0]).subscribe(data=>{
+  actualizarCliente() {
+    this.personaService.updatePersona(this.personas, this.personas.idPersona).subscribe(data => {
+      this.clienteService.updateclientes(this.clientes, this.datainicial[0]).subscribe(data => {
         alert("Cliente actualizado")
         this.verCliente();
       })
     })
   }
-  buscarCliente(){
+  buscarCliente() {
     this.clienteService.porId(this.datainicial[0]).subscribe(data => {
-      this.personas=data.usuario.persona
-      this.clientes=data
-      this.usuarios=data.usuario
+      this.personas = data.usuario.persona
+      this.clientes = data
+      this.usuarios = data.usuario
     })
   }
-  verCliente(){
-    this.estadoBtns=0
-    this.estadoProveedor=0
+  verCliente() {
+    this.estadoBtns = 0
+    this.estadoProveedor = 0
     this.buscarCliente()
     setTimeout(() => {
       const usuaruioCLi = this.txtusuariocl.nativeElement;
@@ -99,9 +99,9 @@ export class EditarClientesComponent implements OnInit {
       asbtnGuardar.style.display = 'none';
     }, 100);
   }
-  editarCliente(){
-    this.estadoBtns=0
-    this.estadoProveedor=0
+  editarCliente() {
+    this.estadoBtns = 0
+    this.estadoProveedor = 0
     setTimeout(() => {
       this.buscarCliente();
       const usuaruioCLi = this.txtusuariocl.nativeElement;
@@ -110,43 +110,43 @@ export class EditarClientesComponent implements OnInit {
       usupasword.disabled = true;
     }, 100);
   }
-  regresarbtn(){
-    this.estadoBtns=1
-    this.estadoProveedor=1
+  regresarbtn() {
+    this.estadoBtns = 1
+    this.estadoProveedor = 1
     this.vaciarcampos()
   }
-  vaciarcampos(){
-    this.personas.nombres=""
-    this.personas.apellidos=""
-    this.personas.cedula=""
-    this.personas.celular=""
-    this.personas.correo=""
-    this.personas.direccion=""
-    this.personas.genero=""
-    this.personas.telefono=""
+  vaciarcampos() {
+    this.personas.nombres = ""
+    this.personas.apellidos = ""
+    this.personas.cedula = ""
+    this.personas.celular = ""
+    this.personas.correo = ""
+    this.personas.direccion = ""
+    this.personas.genero = ""
+    this.personas.telefono = ""
   }
-  mostarDatos(idCliente:any){
+  mostarDatos(idCliente: any) {
     this.clienteService.porId(idCliente).subscribe(data => {
-      this.personas=data.persona
-      this.clientes=data
-      this.usuarios=data.usuario
+      this.personas = data.persona
+      this.clientes = data
+      this.usuarios = data.usuario
       console.log(this.clientes.usuario?.username)
-    //  this.verificarDatos(this.personas.nombres)
+      //  this.verificarDatos(this.personas.nombres)
     })
   }
-  validarDatos(){
-    let datos=0
-    if(this.personas.cedula==null || this.personas.cedula=="" || this.personas.cedula.length<=9){
-    this.cedula = 1;
-    datos=datos+1;
-    }else{
-      this.cedula=0;
+  validarDatos() {
+    let datos = 0
+    if (this.personas.cedula == null || this.personas.cedula == "" || this.personas.cedula.length <= 9) {
+      this.cedula = 1;
+      datos = datos + 1;
+    } else {
+      this.cedula = 0;
     }
-    if(this.personas.nombres==null || this.personas.cedula=="" || this.personas.nombres.length<=2){
+    if (this.personas.nombres == null || this.personas.cedula == "" || this.personas.nombres.length <= 2) {
       this.nombres = 1;
-      datos=datos+1;
-    }else{
-      this.nombres=0;
+      datos = datos + 1;
+    } else {
+      this.nombres = 0;
     }
     return datos;
   }

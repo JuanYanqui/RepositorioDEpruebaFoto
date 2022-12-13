@@ -2,12 +2,12 @@ import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
 import { finalize } from 'rxjs/operators';
-import { Empresa } from '../../../Models/Empresa';
-import { UsuarioService } from '../../../Services/usuario.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 import { Producto } from '../producto';
 import { ProductosService } from '../productos.service';
 import * as FileSaver from 'file-saver';
-import { FotoService } from 'src/app/Services/imagen.service';
+import { FotoService } from 'src/app/modules/services/imagen.service';
 import { HttpClient } from '@angular/common/http';
 declare module 'file-saver';
 

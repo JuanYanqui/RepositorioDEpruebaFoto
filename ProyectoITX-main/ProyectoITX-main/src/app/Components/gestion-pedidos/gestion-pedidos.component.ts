@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Empresa } from 'src/app/Models/Empresa';
-import { ItemPedido } from 'src/app/Models/item-pedido';
-import { Pedido } from 'src/app/Models/pedido';
-import { ItemPedidoService } from 'src/app/Services/item-pedido.service';
-import { PedidoService } from 'src/app/Services/pedido.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { ItemPedido } from 'src/app/modules/models/item-pedido';
+import { Pedido } from 'src/app/modules/models/pedido';
+import { ItemPedidoService } from 'src/app/modules/services/item-pedido.service';
+import { PedidoService } from 'src/app/modules/services/pedido.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 import { Producto } from '../products/producto';
 import { ProductosService } from '../products/productos.service';
-import { PdfMakeWrapper, Img, Txt, Table, Cell, Canvas, Stack} from 'pdfmake-wrapper';
+import { PdfMakeWrapper, Img, Txt, Table, Cell, Canvas, Stack } from 'pdfmake-wrapper';
 import { RowToggler } from 'primeng/table';
 import { PropertyRead } from '@angular/compiler';
-import { VentaPedido } from 'src/app/Models/venta-pedido';
-import { VentaPedidoService } from 'src/app/Services/venta-pedido.service';
+import { VentaPedido } from 'src/app/modules/models/venta-pedido';
+import { VentaPedidoService } from 'src/app/modules/services/venta-pedido.service';
 
 @Component({
   selector: 'app-gestion-pedidos',
@@ -33,9 +33,9 @@ export class GestionPedidosComponent implements OnInit {
   fecha: any;
 
   listaItemsPedido: ItemPedido[] = [];
-  opciones: any[] = [{name:'Pendientes', key: 'A'},{name:'Aceptados', key: 'B'},{name:'Rechazados', key: 'C'},{name:'Cancelados', key: 'D'},{name:'Ventas directas', key: 'E'}];
+  opciones: any[] = [{ name: 'Pendientes', key: 'A' }, { name: 'Aceptados', key: 'B' }, { name: 'Rechazados', key: 'C' }, { name: 'Cancelados', key: 'D' }, { name: 'Ventas directas', key: 'E' }];
   opcionSelected: any = null;
-  fotologoempresa:any
+  fotologoempresa: any
 
   bandPendientes: boolean = true;
   bandAceptados: boolean = false;
@@ -61,19 +61,19 @@ export class GestionPedidosComponent implements OnInit {
     this.obtenerEmpresa();
   }
 
-  obtenerEmpresa(){
+  obtenerEmpresa() {
     let idUsuario = localStorage.getItem('idUsuario');
     this.usuarioService.getPorId(idUsuario).subscribe(
       data => {
         this.empresa = data.empresa!;
-        this.fotologoempresa=this.empresa.logo
+        this.fotologoempresa = this.empresa.logo
         console.log(this.empresa);
         this.obtenerPedidos(this.empresa);
       }
     )
   }
 
-  obtenerVentasDirectas(){
+  obtenerVentasDirectas() {
     this.ventaPedidoService.porEmpresaIsOnline(this.empresa.idEmpresa, false).subscribe(
       data => {
         this.listaVentasDirectas = data;
@@ -82,7 +82,7 @@ export class GestionPedidosComponent implements OnInit {
     )
   }
 
-  obtenerPedidos(empresa: Empresa){
+  obtenerPedidos(empresa: Empresa) {
     this.pedidoService.getByEmpresa(empresa.idEmpresa).subscribe(
       data => {
         this.listaPedidos = data;
@@ -92,21 +92,21 @@ export class GestionPedidosComponent implements OnInit {
     )
   }
 
-  verPedido(pedido: Pedido, isonline: boolean, i: number){
+  verPedido(pedido: Pedido, isonline: boolean, i: number) {
     this.pedido = pedido;
     this.venta = new VentaPedido;
 
-    if (isonline){
+    if (isonline) {
       this.cedula = pedido.cliente?.usuario?.persona?.cedula;
       this.nombre = pedido.cliente?.usuario?.persona?.nombres + " " + pedido.cliente?.usuario?.persona?.apellidos;
       this.fecha = pedido.fechaPedido;
-    }else{
+    } else {
       this.cedula = this.listaVentasDirectas[i].persona?.cedula;
       this.nombre = this.listaVentasDirectas[i].persona?.nombres + " " + this.listaVentasDirectas[i].persona?.apellidos;
       this.fecha = this.listaVentasDirectas[i].fechaVenta;
     }
 
-    
+
 
     this.itemPedidoService.getByPedido(pedido.idPedido).subscribe(
       data => {
@@ -115,15 +115,15 @@ export class GestionPedidosComponent implements OnInit {
         this.bandStock = true;
 
         this.calcularValorTotalItems();
-        
+
         this.listaItemsPedido.forEach(item => {
-          if (item.unidadTotal! > item.producto?.cantidad!){
+          if (item.unidadTotal! > item.producto?.cantidad!) {
             this.bandStock = false;
             console.log('Fuera de stock!');
           }
         });
 
-        if (this.bandAceptados){
+        if (this.bandAceptados) {
           this.ventaPedidoService.porPedido(this.pedido.idPedido).subscribe(
             result => {
               this.venta = result;
@@ -135,7 +135,7 @@ export class GestionPedidosComponent implements OnInit {
     )
   }
 
-  aceptarPedido(){
+  aceptarPedido() {
     this.pedido.revicion = true;
     this.pedido.aceptacion = true;
     this.pedido.fechaRevicion = new Date;
@@ -146,11 +146,11 @@ export class GestionPedidosComponent implements OnInit {
 
     this.updateProductos();
     this.updatePedidoCreateVenta(this.pedido);
-    this.toastr.success('Pedido aceptado!','Exitoso');
+    this.toastr.success('Pedido aceptado!', 'Exitoso');
     this.displayVP = false;
   }
 
-  rechazarPedido(){
+  rechazarPedido() {
     this.pedido.revicion = true;
     this.pedido.aceptacion = false;
     this.pedido.fechaRevicion = new Date;
@@ -160,11 +160,11 @@ export class GestionPedidosComponent implements OnInit {
     this.venta.fechaVenta = new Date;
 
     this.updatePedidoCreateVenta(this.pedido);
-    this.toastr.warning('Pedido rechazado!','Advertencia');
+    this.toastr.warning('Pedido rechazado!', 'Advertencia');
     this.displayVP = false;
   }
 
-  updatePedidoCreateVenta(pedido: Pedido){
+  updatePedidoCreateVenta(pedido: Pedido) {
     this.pedidoService.update(pedido, pedido.idPedido).subscribe(
       data => {
         console.log(data);
@@ -172,9 +172,9 @@ export class GestionPedidosComponent implements OnInit {
         this.venta.pedido = data;
         this.venta.empresa = this.empresa;
         this.venta.isOnline = true;
-        
+
         this.ventaPedidoService.post(this.venta).subscribe(
-          result =>{
+          result => {
             console.log(result);
             //this.venta = result;
           }
@@ -183,7 +183,7 @@ export class GestionPedidosComponent implements OnInit {
     )
   }
 
-  updateProductos(){
+  updateProductos() {
     for (let i = 0; i < this.listaItemsPedido.length; i++) {
       const item = this.listaItemsPedido[i];
 
@@ -193,11 +193,11 @@ export class GestionPedidosComponent implements OnInit {
       let producto = {} as Producto;
       producto = this.listaItemsPedido[i].producto!;
 
-      if (this.bandAceptados){
+      if (this.bandAceptados) {
         let reserva: any = producto.cantidad_reserva
         producto.cantidad_reserva = reserva - unidadesItem;
 
-      } else{        
+      } else {
         let cantidadProducto: any = item.producto?.cantidad;
         total = cantidadProducto - unidadesItem;
 
@@ -207,7 +207,7 @@ export class GestionPedidosComponent implements OnInit {
 
       console.log(producto);
 
-      this.productoService.updateProduct(producto, producto.id+'').subscribe(
+      this.productoService.updateProduct(producto, producto.id + '').subscribe(
         data => {
           console.log(data);
         }
@@ -215,19 +215,19 @@ export class GestionPedidosComponent implements OnInit {
     }
   }
 
-  verificarStock(cantidadPedido: number, cantidadTotal: number): string{
+  verificarStock(cantidadPedido: number, cantidadTotal: number): string {
     let stock: string = '';
 
-    if (cantidadPedido <= cantidadTotal){
+    if (cantidadPedido <= cantidadTotal) {
       stock = 'EN STOCK';
-    }else{
+    } else {
       stock = 'FUERA DE STOCK';
     }
 
     return stock;
   }
 
-  entregarPedidoVenta(){
+  entregarPedidoVenta() {
     this.venta.estadoEntrega = true;
     this.venta.fechaEntrega = new Date;
 
@@ -236,13 +236,13 @@ export class GestionPedidosComponent implements OnInit {
     this.ventaPedidoService.update(this.venta, this.venta.idVentaPedido).subscribe(
       result => {
         console.log(result);
-        this.toastr.info('Se ha registrado la entrega del pedido','');
+        this.toastr.info('Se ha registrado la entrega del pedido', '');
         this.displayVP = false;
       }
-    );      
+    );
   }
 
-  calcularValorTotalItems(): number{
+  calcularValorTotalItems(): number {
     let total: any = 0;
     this.listaItemsPedido.forEach(item => {
       total = total + item.subtotal;
@@ -254,43 +254,43 @@ export class GestionPedidosComponent implements OnInit {
     return total;
   }
 
-  calcularVuelto(){
+  calcularVuelto() {
     this.venta.vuelto = this.venta.valorCaja! - this.venta.valorPagar!;
-    if (this.venta.vuelto === NaN){
+    if (this.venta.vuelto === NaN) {
       this.venta.vuelto = 0;
     }
   }
 
-  filtraLista(){
-    switch (this.opcionSelected.key){
+  filtraLista() {
+    switch (this.opcionSelected.key) {
       case 'A':
         this.bandPendientes = true;
         this.bandAceptados = false;
         this.bandRechazados = false;
         this.bandCancelados = false;
         this.bandVentasDirectas = false;
-      break;
+        break;
       case 'B':
         this.bandPendientes = false;
         this.bandAceptados = true;
         this.bandRechazados = false;
         this.bandCancelados = false;
         this.bandVentasDirectas = false;
-      break;
+        break;
       case 'C':
         this.bandPendientes = false;
         this.bandAceptados = false;
         this.bandRechazados = true;
         this.bandCancelados = false;
         this.bandVentasDirectas = false;
-      break;
+        break;
       case 'D':
         this.bandPendientes = false;
         this.bandAceptados = false;
         this.bandRechazados = false;
         this.bandCancelados = true;
         this.bandVentasDirectas = false;
-      break;
+        break;
       case 'E':
         this.bandPendientes = false;
         this.bandAceptados = false;
@@ -298,63 +298,65 @@ export class GestionPedidosComponent implements OnInit {
         this.bandCancelados = false;
         this.bandVentasDirectas = true;
         this.obtenerVentasDirectas();
-      break;
+        break;
     };
   }
-  async generarPDF(){
+  async generarPDF() {
     var totalpedido = this.calcularValorTotalItems();
     const pdf = new PdfMakeWrapper();
     pdf.pageOrientation('portrait')
     pdf.pageSize('A4')
     pdf.add(new Txt("Factura").bold().italics().alignment('left').end);
-    pdf.add(new Txt('00-'+this.pedido.idPedido).bold().italics().alignment('right').color('red').end);
+    pdf.add(new Txt('00-' + this.pedido.idPedido).bold().italics().alignment('right').color('red').end);
     //pdf.add(await new Img(imageData).build());
     pdf.add(pdf.ln(3))
     pdf.add(new Txt(this.empresa.nombre).bold().italics().alignment('center').end);
     pdf.add(pdf.ln(1))
-    pdf.add(new Stack([ this.empresa.ruc, this.empresa.celular+' '+this.empresa.telefono, this.empresa.correo, this.empresa.direccion ]).alignment('center').end)
+    pdf.add(new Stack([this.empresa.ruc, this.empresa.celular + ' ' + this.empresa.telefono, this.empresa.correo, this.empresa.direccion]).alignment('center').end)
     pdf.add(pdf.ln(1))
     pdf.add(new Table([
-      [ 'Fecha: '+this.pedido.fechaPedido]
-  ]).widths([ '*']).end)
-  pdf.add(pdf.ln(0.5))
-  pdf.add(new Table([
-    [ 'Cedula: ',this.pedido.cliente?.usuario?.persona?.cedula]
-]).widths([ 50,'*']).end)
-pdf.add(new Table([
-  [ "Nombres: ",this.pedido.cliente?.usuario?.persona?.nombres+" "+this.pedido.cliente?.usuario?.persona?.apellidos]
-]).widths([ 50,'*']).end)
-pdf.add(new Table([
-  [ "Contacto: ",this.pedido.cliente?.usuario?.persona?.celular,'Correo: ',this.pedido.cliente?.usuario?.persona?.correo]
-]).widths([ 50,'*',50,'*']).end)
-pdf.add(pdf.ln(0.1))
-pdf.add(new Table([
-  [ "Direccion: ",this.pedido.cliente?.usuario?.persona?.direccion]
-]).widths([ 50,'*']).end)
-pdf.add(pdf.ln(1))
+      ['Fecha: ' + this.pedido.fechaPedido]
+    ]).widths(['*']).end)
+    pdf.add(pdf.ln(0.5))
+    pdf.add(new Table([
+      ['Cedula: ', this.pedido.cliente?.usuario?.persona?.cedula]
+    ]).widths([50, '*']).end)
+    pdf.add(new Table([
+      ["Nombres: ", this.pedido.cliente?.usuario?.persona?.nombres + " " + this.pedido.cliente?.usuario?.persona?.apellidos]
+    ]).widths([50, '*']).end)
+    pdf.add(new Table([
+      ["Contacto: ", this.pedido.cliente?.usuario?.persona?.celular, 'Correo: ', this.pedido.cliente?.usuario?.persona?.correo]
+    ]).widths([50, '*', 50, '*']).end)
+    pdf.add(pdf.ln(0.1))
+    pdf.add(new Table([
+      ["Direccion: ", this.pedido.cliente?.usuario?.persona?.direccion]
+    ]).widths([50, '*']).end)
+    pdf.add(pdf.ln(1))
     pdf.add(new Txt("__________________________________________________________________________________________________").bold().italics().alignment('center').end);
     pdf.add(pdf.ln(1))
     pdf.add(new Table([
-      ['Nombre','Precio','Cantidad','Subtotal'],
-    ]).widths([ '*','*','*','*']).layout(
+      ['Nombre', 'Precio', 'Cantidad', 'Subtotal'],
+    ]).widths(['*', '*', '*', '*']).layout(
       {
-       fillColor:(rowIndex?:number, node?:any, columnIndex?:number)=>{
-      return rowIndex === 0 ? '#CCCCCC': '';
-    }}).end)
+        fillColor: (rowIndex?: number, node?: any, columnIndex?: number) => {
+          return rowIndex === 0 ? '#CCCCCC' : '';
+        }
+      }).end)
     pdf.add(new Table([
       ...this.extractData(this.listaItemsPedido)
     ]).widths('*').end)
     pdf.add(new Table([
-      ['Total','','$ '+totalpedido],
-    ]).widths([40,'*',100]).layout(
+      ['Total', '', '$ ' + totalpedido],
+    ]).widths([40, '*', 100]).layout(
       {
-       fillColor:(rowIndex?:number, node?:any, columnIndex?:number)=>{
-      return rowIndex === 0 ? '#CCCCCC': '';
-    }}).end)
+        fillColor: (rowIndex?: number, node?: any, columnIndex?: number) => {
+          return rowIndex === 0 ? '#CCCCCC' : '';
+        }
+      }).end)
     //pdf.add(await new Img(this.fotologoempresa+"").build());
     pdf.create().open();
   }
-  extractData(datosTabla:any){
-    return datosTabla.map((row:any) =>[row.producto?.nombre,"$"+row.producto?.precio_venta,row.cantidad,"$"+((row.subtotal)*100)/100]);
+  extractData(datosTabla: any) {
+    return datosTabla.map((row: any) => [row.producto?.nombre, "$" + row.producto?.precio_venta, row.cantidad, "$" + ((row.subtotal) * 100) / 100]);
   }
 }

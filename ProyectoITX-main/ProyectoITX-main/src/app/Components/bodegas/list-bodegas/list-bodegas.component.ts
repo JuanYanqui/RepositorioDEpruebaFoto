@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { PdfMakeWrapper, Table, Txt } from 'pdfmake-wrapper';
 import { finalize } from 'rxjs/operators';
-import { Empresa } from '../../../Models/Empresa';
-import { UsuarioService } from '../../../Services/usuario.service';
+import { Empresa } from '../../../modules/models/Empresa';
+import { UsuarioService } from '../../../modules/services/usuario.service';
 import { Bodega } from '../bodega';
 import { BodegasService } from '../bodegas.service';
 
@@ -14,6 +14,7 @@ import { BodegasService } from '../bodegas.service';
   styleUrls: ['./list-bodegas.component.css'],
 })
 export class ListBodegasComponent implements OnInit {
+
   bodegasList: Bodega[] = [];
   bodega = {} as Bodega;
   selectedId = 0;
@@ -22,7 +23,6 @@ export class ListBodegasComponent implements OnInit {
   constructor(
     private usuariosService: UsuarioService,
     private toastr: ToastrService,
-    private router: Router,
     private bodegasService: BodegasService
   ) {}
 

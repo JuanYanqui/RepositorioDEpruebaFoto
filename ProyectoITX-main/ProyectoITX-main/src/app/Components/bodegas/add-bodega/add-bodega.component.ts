@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Empresa } from 'src/app/Models/Empresa';
-import { PersonalCargoService } from 'src/app/Services/personal-cargo.service';
-import { SharedServices } from 'src/app/Services/shared.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
-import { PersonalCargo } from '../../../Models/personal-cargo';
-import { AlertsService } from '../../../Services/alerts/alerts.service';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { PersonalCargoService } from 'src/app/modules/services/personal-cargo.service';
+import { SharedServices } from 'src/app/modules/services/shared.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
+import { PersonalCargo } from '../../../modules/Models/personal-cargo';
+import { AlertsService } from '../../../modules/services/alerts/alerts.service';
 import { Bodega } from '../bodega';
 import { BodegasService } from '../bodegas.service';
 
@@ -15,7 +15,7 @@ import { BodegasService } from '../bodegas.service';
   styleUrls: ['./add-bodega.component.css'],
 })
 export class AddBodegaComponent implements OnInit {
-  bodegaForm!: FormGroup;
+  bodegaForm!: UntypedFormGroup;
   validPattern = '^(?! )^[A-Za-z0-9 ]+$';
   validNumberPatern = '[0-9]*';
   bodega = {} as Bodega;
@@ -29,7 +29,7 @@ export class AddBodegaComponent implements OnInit {
   selectedCity1: any;
 
   constructor (
-    private formBuilder: FormBuilder,
+    private formBuilder: UntypedFormBuilder,
     private bodegaService: BodegasService,
     private alertService: AlertsService,
     private personalCargoService: PersonalCargoService,

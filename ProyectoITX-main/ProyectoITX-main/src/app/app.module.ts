@@ -42,7 +42,6 @@ import { ProveedoresComponent } from './Components/proveedores/proveedores.compo
 import { ToolbarComponent } from './Components/toolbar/toolbar.component';
 import { FormPublicUserComponent } from './Components/Usuarios/form-public-user/form-public-user.component';
 import { LoginUsuariosComponent } from './Components/Usuarios/login-usuarios/login-usuarios.component';
-import { InterceptorService } from './Services/interceptor/interceptor.service';
 import { ConfiguracionesComponent } from './Components/configuraciones/configuraciones.component';
 import { PedidoComponent } from './Components/pedido/pedido.component';
 import { ClientPedidosComponent } from './Components/client-pedidos/client-pedidos.component';
@@ -54,6 +53,7 @@ import { PdfMakeWrapper } from 'pdfmake-wrapper';
 import * as pdfFonts from "pdfmake/build/vfs_fonts";
 import { ReportesComponent } from './Components/reportes/reportes.component';
 import { VentaClienteComponent } from './Components/venta-cliente/venta-cliente.component';
+import { InterceptorService } from './modules/services/interceptor/interceptor.service';
 PdfMakeWrapper.setFonts(pdfFonts);
 
 @NgModule({
@@ -82,7 +82,7 @@ PdfMakeWrapper.setFonts(pdfFonts);
     VentaClienteComponent,
   ],
   imports: [
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'serverApp' }),
     CommonModule,
     AppRoutingModule,
     FormsModule,

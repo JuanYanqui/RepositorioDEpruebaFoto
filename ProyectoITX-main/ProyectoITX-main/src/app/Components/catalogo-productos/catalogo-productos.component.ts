@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { SelectItem } from 'primeng/api';
-import { Empresa } from 'src/app/Models/Empresa';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 import { Producto } from '../products/producto';
 import { ProductosService } from '../products/productos.service';
 
@@ -40,16 +40,16 @@ export class CatalogoProductosComponent implements OnInit {
     let value = event.value;
 
     if (value.indexOf('!') === 0) {
-        this.sortOrder = -1;
-        this.sortField = value.substring(1, value.length);
+      this.sortOrder = -1;
+      this.sortField = value.substring(1, value.length);
     }
     else {
-        this.sortOrder = 1;
-        this.sortField = value;
+      this.sortOrder = 1;
+      this.sortField = value;
     }
-}
+  }
 
-  obtenerEmpresa(){
+  obtenerEmpresa() {
     let idUsuario = localStorage.getItem('idUsuario');
     this.usuarioService.getPorId(idUsuario).subscribe(
       data => {
@@ -62,7 +62,7 @@ export class CatalogoProductosComponent implements OnInit {
     )
   }
 
-  obtenerProductosEmpresa(empresa: Empresa){
+  obtenerProductosEmpresa(empresa: Empresa) {
     this.productoService.getProductsByEmpresa(empresa.idEmpresa).subscribe(
       data => {
         this.listaProductos = data;
@@ -71,21 +71,21 @@ export class CatalogoProductosComponent implements OnInit {
     )
   }
 
-  agregarAlPedido(producto: Producto){
-    let items: string [] = [];
+  agregarAlPedido(producto: Producto) {
+    let items: string[] = [];
     let idProductos: any = '';
-    
+
     idProductos = sessionStorage.getItem('productosPedido');
 
-    if (idProductos != '' && idProductos != null){
+    if (idProductos != '' && idProductos != null) {
       items = idProductos.split(',');
-    }    
+    }
 
-    if (this.evitarRepetido(producto.id)){
-      this.toastr.warning('El producto ya esta agregado','Advertencia!');
-    }else{
-      items.push(producto.id+'');
-      this.toastr.success('Producto agregado al pedido','Exitoso!')
+    if (this.evitarRepetido(producto.id)) {
+      this.toastr.warning('El producto ya esta agregado', 'Advertencia!');
+    } else {
+      items.push(producto.id + '');
+      this.toastr.success('Producto agregado al pedido', 'Exitoso!')
     }
 
     idProductos = '';
@@ -93,38 +93,38 @@ export class CatalogoProductosComponent implements OnInit {
     for (let i = 0; i < items.length; i++) {
       const element = items[i];
 
-      if (i === (items.length - 1)){
+      if (i === (items.length - 1)) {
         idProductos += element;
-      }else{
-        idProductos += element+',';
+      } else {
+        idProductos += element + ',';
       }
-      
+
     }
     this.numItems = items.length;
-    sessionStorage.setItem('productosPedido',idProductos);
+    sessionStorage.setItem('productosPedido', idProductos);
     console.log(sessionStorage.getItem('productosPedido'));
   }
 
-  evitarRepetido(id: any): boolean{
+  evitarRepetido(id: any): boolean {
     let resp: boolean = false;
-    let items: string [] = [];
+    let items: string[] = [];
     let idProductos: any = '';
-    
+
     idProductos = sessionStorage.getItem('productosPedido');
 
-    if (idProductos != '' && idProductos != null){
+    if (idProductos != '' && idProductos != null) {
       items = idProductos.split(',');
     }
 
     let i: number = 0;
-    while(!resp && items.length > i){
+    while (!resp && items.length > i) {
       const item = items[i];
-      
-      if (id+'' === item){
+
+      if (id + '' === item) {
         resp = true;
       }
 
-      console.log('i '+i);
+      console.log('i ' + i);
       i++;
     }
 
@@ -132,11 +132,11 @@ export class CatalogoProductosComponent implements OnInit {
     return resp;
   }
 
-  verPedido(){
+  verPedido() {
     this.router.navigate(['/mi-pedido']);
   }
 
-  vaciarPedido(){
+  vaciarPedido() {
     sessionStorage.removeItem('productosPedido');
     this.numItems = 0;
   }

@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { VigilanteClientAdminGuard } from '../../Services/guard/vigilante-client-admin.guard';
+import { VigilanteClientAdminGuard } from '../../modules/services/guard/vigilante-client-admin.guard';
 import { ControlInventariosComponent } from './control-inventarios.component';
 
 const routes: Routes = [

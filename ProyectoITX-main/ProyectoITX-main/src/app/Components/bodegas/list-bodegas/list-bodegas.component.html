@@ -1,11 +1,7 @@
-<p-table
-  #dt
-  [value]="bodegasList"
-  dataKey="id" [rows]="25" [showCurrentPageReport]="true"
-  [rowsPerPageOptions]="[10,25,50]"  [loading]="loading" styleClass="p-datatable-gridlines p-datatable-sm"
+<p-table #dt [value]="bodegasList" dataKey="id" [rows]="25" [showCurrentPageReport]="true"
+  [rowsPerPageOptions]="[10,25,50]" [loading]="loading" styleClass="p-datatable-gridlines p-datatable-sm"
   [paginator]="true" [rowHover]="true" [resizableColumns]="true"
-  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
-  [globalFilterFields]="[
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [globalFilterFields]="[
     'id',
     'Capacidad máxima',
     'Descricion',
@@ -16,25 +12,20 @@
     'Telefono',
     'Tipo de bodega',
     'Estado'
-  ]"
-  [(selection)]="arraySelected" dataKey="code" responsiveLayout="scroll"
-  >
+  ]" [(selection)]="arraySelected" dataKey="code" responsiveLayout="scroll">
   <ng-template pTemplate="caption">
     <div class="table-header">
       <span class="p-input-icon-right">
         <i class="pi pi-search"></i>
-        <input
-          pInputText
-          type="text"
-          (input)="dt.filterGlobal($any($event.target).value, 'contains')"
-          placeholder="Global search"
-        />
+        <input pInputText type="text" (input)="dt.filterGlobal($any($event.target).value, 'contains')"
+          placeholder="Global search" />
       </span>
     </div>
     <div class="p-d-flex" style="align-content: right;">
       <span class="p-buttonset">
         <br>
-        <button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;" label="PDF" icon="pi pi-file-pdf"></button>
+        <button pButton type="button" (click)="generaraPDF()" style="background-color: red;border-radius:2cm;"
+          label="PDF" icon="pi pi-file-pdf"></button>
       </span>
     </div>
   </ng-template>
@@ -42,34 +33,34 @@
     <tr>
       <th></th>
       <th pResizableColumn>
-          Id Bodega
+        Id Bodega
       </th>
       <th pResizableColumn>
-          Capacidad Máxima
+        Capacidad Máxima
       </th>
       <th pResizableColumn>
-          Descricion
+        Descricion
       </th>
       <th pResizableColumn>
-          Dirección
-     </th>
-      <th pResizableColumn >
-          Inventario Disponible
-       </th>
-      <th pResizableColumn>
-          Localidad
-     </th>
-      <th pResizableColumn>
-          Nombre
-     </th>
-      <th pResizableColumn>
-          Telefono
+        Dirección
       </th>
       <th pResizableColumn>
-          Tipo de bodega
+        Inventario Disponible
       </th>
       <th pResizableColumn>
-          Estado
+        Localidad
+      </th>
+      <th pResizableColumn>
+        Nombre
+      </th>
+      <th pResizableColumn>
+        Telefono
+      </th>
+      <th pResizableColumn>
+        Tipo de bodega
+      </th>
+      <th pResizableColumn>
+        Estado
       </th>
       <th>
         <!-- <div class="p-d-flex p-jc-between p-ai-center">Accion</div> -->
@@ -78,9 +69,9 @@
     <tr>
       <th style="width: 3rem">
         <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
-    </th>
-      <th >
-        <p-columnFilter  type="text" field="id"></p-columnFilter>
+      </th>
+      <th>
+        <p-columnFilter type="text" field="id"></p-columnFilter>
       </th>
       <th pResizableColumn>
         <p-columnFilter type="text" field="capacidad_max"></p-columnFilter>
@@ -113,10 +104,10 @@
     </tr>
   </ng-template>
   <ng-template pTemplate="body" let-bodega>
-    <tr >
+    <tr>
       <td>
         <p-tableCheckbox [value]="bodega"></p-tableCheckbox>
-    </td>
+      </td>
       <td style="width: 30px;height: 30px;">
         {{ bodega.id }}
       </td>
@@ -148,10 +139,8 @@
         {{ bodega.estado | disponibilidad }}
       </td>
       <td style="text-align: center">
-        <a [routerLink]="['../detalle-bodega', bodega.id]"
-          class="btn btn-warning"
-          ><i class="bi bi-pencil-square"></i
-        ></a>
+        <a [routerLink]="['../detalle-bodega', bodega.id]" class="btn btn-warning"><i
+            class="bi bi-pencil-square"></i></a>
         <!-- <button
           pButton
           type="button"

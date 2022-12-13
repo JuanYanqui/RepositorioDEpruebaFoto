@@ -13,7 +13,7 @@ import { MenubarModule } from 'primeng/menubar';
 import { PanelModule } from 'primeng/panel';
 import { PasswordModule } from 'primeng/password';
 import { TableModule } from 'primeng/table';
-import { DisponibilidadModule } from 'src/app/Services/pipes/disponibilidad/disponibilidad.module';
+import { DisponibilidadModule } from 'src/app/modules/services/pipes/disponibilidad/disponibilidad.module';
 import { AddBodegaComponent } from './add-bodega/add-bodega.component';
 import { BodegaComponent } from './bodega/bodega.component';
 import { BodegasRoutingModule } from './bodegas-routing.module';

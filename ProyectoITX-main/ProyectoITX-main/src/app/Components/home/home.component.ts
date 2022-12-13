@@ -11,6 +11,15 @@ export class HomeComponent implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+    this.obtenerEmpresa();
+  }
+
+  obtenerEmpresa() {
+    let idUsuario = localStorage.getItem('idUsuario');
+    console.log("la id del user => " + idUsuario);
+
+    let imgUsuario = localStorage.getItem('nameImagen');
+    console.log("la imagen del user => " + imgUsuario);
   }
 
   verCatalogo(){

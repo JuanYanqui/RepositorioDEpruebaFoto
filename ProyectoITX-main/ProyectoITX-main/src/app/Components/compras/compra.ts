@@ -1,4 +1,4 @@
-import { Proveedor } from 'src/app/Models/proveedor';
+import { Proveedor } from 'src/app/modules/models/proveedor';
 import { Producto } from '../products/producto';
 export interface Compra {
   id?: number;

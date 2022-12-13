@@ -1,5 +1,5 @@
-import { Empresa } from 'src/app/Models/Empresa';
-import { Proveedor } from 'src/app/Models/proveedor';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { Proveedor } from 'src/app/modules/models/proveedor';
 import { Compra } from './compra';
 export interface CompraDetail {
   id: number;

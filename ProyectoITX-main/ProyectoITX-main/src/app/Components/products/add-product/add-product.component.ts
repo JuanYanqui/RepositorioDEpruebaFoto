@@ -6,17 +6,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import { AlertsService } from '@service/alerts';
+import { AlertsService } from 'src/app/modules/services/alerts/alerts.service';
 import { HttpClient } from '@angular/common/http';
-
-import { Categoria } from 'src/app/Models/categoria';
-import { Proveedor } from 'src/app/Models/proveedor';
-import { FotoService } from 'src/app/Services/imagen.service';
-import { ProveedorService } from 'src/app/Services/proveedor.service';
-import { Empresa } from '../../../Models/Empresa';
-import { CategoriaService } from '../../../Services/categoria.service';
-import { SharedServices } from '../../../Services/shared.service';
-import { UsuarioService } from '../../../Services/usuario.service';
+import { Categoria } from 'src/app/modules/models/categoria';
+import { Proveedor } from 'src/app/modules/models/proveedor';
+import { FotoService } from 'src/app/modules/services/imagen.service';
+import { ProveedorService } from 'src/app/modules/services/proveedor.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { CategoriaService } from 'src/app/modules/services/categoria.service';
+import { SharedServices } from 'src/app/modules/services/shared.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 import { Producto } from '../producto';
 import { ProductosService } from '../productos.service';
 export interface IHash {

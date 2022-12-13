@@ -1,4 +1,4 @@
-import { Empresa } from "src/app/Models/Empresa";
+import { Empresa } from "src/app/modules/models/Empresa";
 import { Bodega } from "../bodegas/bodega";
 import { CompraDetail } from "../compras/compradetail";
 

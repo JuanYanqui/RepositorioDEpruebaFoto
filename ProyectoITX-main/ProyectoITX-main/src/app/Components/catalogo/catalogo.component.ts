@@ -1,7 +1,8 @@
+
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { Empresa } from 'src/app/Models/Empresa';
-import { EmpresaService } from 'src/app/Services/empresa.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { EmpresaService } from 'src/app/modules/services/empresa.service';
 import { Producto } from '../products/producto';
 import { ProductosService } from '../products/productos.service';
 
@@ -23,28 +24,28 @@ export class CatalogoComponent implements OnInit {
   ngOnInit(): void {
     this.responsiveOptions = [
       {
-          breakpoint: '1024px',
-          numVisible: 3,
-          numScroll: 3
+        breakpoint: '1024px',
+        numVisible: 3,
+        numScroll: 3
       },
       {
-          breakpoint: '768px',
-          numVisible: 2,
-          numScroll: 2
+        breakpoint: '768px',
+        numVisible: 2,
+        numScroll: 2
       },
       {
-          breakpoint: '560px',
-          numVisible: 1,
-          numScroll: 1
+        breakpoint: '560px',
+        numVisible: 1,
+        numScroll: 1
       }
     ];
 
     this.obtenerEmpresas();
   }
 
-  obtenerEmpresas(){
+  obtenerEmpresas() {
     this.empresaService.getEmpresas().subscribe(
-      data => {
+      (data) => {
         this.listaEmpresas = data.map(
           result => {
             let empresa = new Empresa;
@@ -76,11 +77,11 @@ export class CatalogoComponent implements OnInit {
     );
   }
 
-  obtenerProductosEmpresa(empresa: Empresa){
+  obtenerProductosEmpresa(empresa: Empresa) {
 
     this.nombreEmpresa = empresa.nombre;
     this.productoService.getProductsByEmpresa(empresa.idEmpresa).subscribe(
-      data => {
+      (data) => {
         this.listaProductos = data;
       }
     )

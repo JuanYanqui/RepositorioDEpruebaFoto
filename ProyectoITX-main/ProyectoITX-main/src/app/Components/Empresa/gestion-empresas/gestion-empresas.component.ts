@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
-import { Empresa } from 'src/app/Models/Empresa';
-import { Persona } from 'src/app/Models/persona';
-import { Roles } from 'src/app/Models/Roles';
-import { Usuario } from 'src/app/Models/Usuario';
-import { EmpresaService } from 'src/app/Services/empresa.service';
-import { PersonaService } from 'src/app/Services/persona.service';
-import { RolesService } from 'src/app/Services/roles.service';
-import { SharedServices } from 'src/app/Services/shared.service';
-import { UsuarioService } from 'src/app/Services/usuario.service';
+import { Empresa } from 'src/app/modules/models/Empresa';
+import { Persona } from 'src/app/modules/models/persona';
+import { Roles } from 'src/app/modules/models/Roles';
+import { Usuario } from 'src/app/modules/models/Usuario';
+import { EmpresaService } from 'src/app/modules/services/empresa.service';
+import { PersonaService } from 'src/app/modules/services/persona.service';
+import { RolesService } from 'src/app/modules/services/roles.service';
+import { SharedServices } from 'src/app/modules/services/shared.service';
+import { UsuarioService } from 'src/app/modules/services/usuario.service';
 
 @Component({
   selector: 'app-gestion-empresas',
@@ -75,7 +75,7 @@ export class GestionEmpresasComponent implements OnInit {
     this.obtenerEmpresas();
   }
 
-  obtenerEmpresas(){
+  obtenerEmpresas() {
     this.empresaService.getEmpresas().subscribe(
       data => {
         this.listaEmpresas = data.map(
@@ -110,27 +110,27 @@ export class GestionEmpresasComponent implements OnInit {
     )
   }
 
-  agregarCuentaBancaria(){
-    if (this.banco != '' && this.tipo != '' && this.numero != ''){
+  agregarCuentaBancaria() {
+    if (this.banco != '' && this.tipo != '' && this.numero != '') {
       this.cuentaBancaria = 'BANCO/COOPERATIVA: ' + this.banco + ' TIPO DE CUENTA: ' + this.tipo + ' NÚMERO: ' + this.numero;
       this.empresa.cuentasBancarias.push(this.cuentaBancaria);
       this.banco = '';
       this.tipo = '';
       this.numero = '';
-    }else{
+    } else {
       this.toastr.warning('Rellene todos los campos de cuenta bancaria', 'Aviso!')
     }
-    
+
   }
 
-  quitarCuentaBancaria(i: any){
+  quitarCuentaBancaria(i: any) {
 
     delete this.empresa.cuentasBancarias[i];
 
     for (let index = 0; index < this.empresa.cuentasBancarias.length; index++) {
-      if(this.empresa.cuentasBancarias[index] != null || this.empresa.cuentasBancarias[index] === ''){
+      if (this.empresa.cuentasBancarias[index] != null || this.empresa.cuentasBancarias[index] === '') {
         this.cuentas.push(this.empresa.cuentasBancarias[index]);
-      }      
+      }
     }
 
     this.empresa.cuentasBancarias = this.cuentas;
@@ -146,12 +146,12 @@ export class GestionEmpresasComponent implements OnInit {
   //   };
   // }
 
-  editarEmpresa(empresa: Empresa){
+  editarEmpresa(empresa: Empresa) {
     this.displayEE = true;
 
     this.empresa.acronimo = empresa.acronimo;
     this.empresa.celular = empresa.celular;
-    this.empresa.ciudad  = empresa.ciudad;
+    this.empresa.ciudad = empresa.ciudad;
     this.empresa.codigoPostal = empresa.codigoPostal;
     this.empresa.correo = empresa.correo;
     this.empresa.cuentasBancarias = empresa.cuentasBancarias;
@@ -185,44 +185,44 @@ export class GestionEmpresasComponent implements OnInit {
     this.ciudad = this.empresa.ciudad;
 
     this.genero = this.persona.genero;
-    
+
   }
 
-  actualizarEmpresa(){
+  actualizarEmpresa() {
     //this.toastr.warning('Se esta trabajando aun!','Informacion');
-    if (this.actualizaImagen){
-      this.sharedServices.addimage(this.image,'empresas').subscribe({
-        next: (img:string) => (this.empresa.logo = img),
+    if (this.actualizaImagen) {
+      this.sharedServices.addimage(this.image, 'empresas').subscribe({
+        next: (img: string) => (this.empresa.logo = img),
         complete: () =>
-        this.updateEmpresa(),  
+          this.updateEmpresa(),
       });
-    }else{
+    } else {
       this.updateEmpresa();
-    }     
+    }
   }
 
-  updateEmpresa(){
+  updateEmpresa() {
     this.empresaService.updateEmpresa(this.empresa, this.empresa.idEmpresa).subscribe(
       data => {
         console.log(data);
-        this.toastr.success('La empresa se actualizo correctamente!','Actualizacion');
+        this.toastr.success('La empresa se actualizo correctamente!', 'Actualizacion');
         this.limpiar();
       }
     )
   }
 
-  darBajaEmpresa(empresa: Empresa){
+  darBajaEmpresa(empresa: Empresa) {
     let title = '';
 
     this.empresa = empresa;
 
     console.log(this.empresa);
 
-    if (empresa.estado === true){
+    if (empresa.estado === true) {
       this.empresa.estado = true;
       empresa.estado = true;
       title = 'Habilitada!';
-    }else {
+    } else {
       this.empresa.estado = false;
       empresa.estado = false;
       title = 'Deshabilitada!';
@@ -231,7 +231,7 @@ export class GestionEmpresasComponent implements OnInit {
     this.empresaService.updateEmpresa(this.empresa, this.empresa.idEmpresa).subscribe(
       data => {
         console.log(data);
-        this.toastr.warning('Empresa '+title,'Advertencia!')
+        this.toastr.warning('Empresa ' + title, 'Advertencia!')
         this.limpiar();
       }
     )
@@ -240,11 +240,11 @@ export class GestionEmpresasComponent implements OnInit {
   imageSelected(event: any): void {
     this.actualizaImagen = true;
     const file = event.target.files[0];
-    
+
     console.log(file.name);
     this.image = file;
     this.files.push(file);
-  
+
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (f) => {
@@ -252,7 +252,7 @@ export class GestionEmpresasComponent implements OnInit {
     };
   }
 
-  limpiar(){
+  limpiar() {
     this.empresa = new Empresa;
     this.persona = new Persona;
     this.provincia = '';
